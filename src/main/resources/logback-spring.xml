@@ -110,5 +110,4 @@
         <appender-ref ref="ROLLFILE" />
     </root>
 
-<typeAliases></typeAliases>
 </configuration>
