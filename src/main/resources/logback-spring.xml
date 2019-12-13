@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds" debug="true">
+
+    <property name="LOGS_ABSOLUTE_PATH" value="/logs" />
+
+    <!-- 콘솔로 로그를 남김 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+
+            <!-- 로그 메시지 패턴 -->
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <!-- 파일로 로그를 남김 -->
+    <appender name="ROLLFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_ABSOLUTE_PATH}/logback.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n
+            </Pattern>
+        </encoder>
+
+        <!-- 로그를 남기는 파일의 용량이 50KB가 넘으면 이를 압축 파일로 만들고 새로 로그 파일로 만들라는 정책 -->
+        <!-- <triggeringPolicy -->
+        <!-- class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy"> -->
+        <!-- <MaxFileSize>2MB</MaxFileSize> -->
+        <!-- </triggeringPolicy> -->
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+
+            <fileNamePattern>${LOGS_ABSOLUTE_PATH}/logback.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>5MB</maxFileSize>
+                <!-- kb, mb, gb -->
+            </timeBasedFileNamingAndTriggeringPolicy>
+
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+
+    <!-- Database Section -->
+    <!--<logger name="org.apache.commons.dbcp2" level="error" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLFILE" />
+    </logger>
+    <logger name="java.sql" level="warn" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLFILE" />
+    </logger>-->
+    <!--<logger name="jdbc" level="off" />
+    &lt;!&ndash; SQL문과 해당 SQL을 실행시키는데 수행된 시간 정보(milliseconds)를 포함한다. &ndash;&gt;
+    <logger name="jdbc.sqltiming" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLFILE" />
+    </logger>-->
+    <!--
+    <logger name="jdbc.resultsettable" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLFILE" />
+    </logger>
+    -->
+    <!-- netflix -->
+    <logger name="com.netflix.discovery" level="error" additivity="false">
+    <appender-ref ref="CONSOLE" />
+    <appender-ref ref="ROLLFILE" />
+    </logger>
+
+    <!--
+    &lt;!&ndash; Hikari CP &ndash;&gt;
+    <logger name="com.zaxxer.hikari.pool.HikariPool" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLFILE" />
+    </logger>
+
+    -->
+    <!-- Application Section -->
+    <logger name="lxpf" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLFILE" />
+    </logger>
+
+
+    <!-- Framework Section -->
+    <logger name="egovframework" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLFILE" />
+    </logger>
+    <logger name="org.springframework" level="warn" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLFILE" />
+    </logger>
+    <logger name="org.springframework.scheduling" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLFILE" />
+    </logger>
+    <logger name="org.springframework.web" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLFILE" />
+    </logger>
+
+    <!-- root는 글로벌 로거를 의미하며, 위의 logger에 해당하지 않으면 root 로거가 실행된다. -->
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLFILE" />
+    </root>
+
+<typeAliases></typeAliases>
+</configuration>
