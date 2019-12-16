@@ -1,7 +1,7 @@
 # This file is a template, and might need editing before it works on your project.
 
 # Start with a base image containing Java runtime
-FROM 192.168.0.11:5000/start-java8:v1
+FROM start-java8:v1
 
 # Add Author info
 LABEL maintainer="lx's project developer"
