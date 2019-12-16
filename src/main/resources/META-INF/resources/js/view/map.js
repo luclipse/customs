@@ -4,6 +4,7 @@ var locAdm;
 var grid;
 var dataGrid;
 var mapSno = 1; //임시 맵 sno
+var currentLayer = null;
 var init = function () {
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
@@ -156,7 +157,7 @@ var layerToData = function (layer) {
     cmmApi.getTcfDatBySno(layer, addLayer);
 };
 var addLayer = function (layer, data) {
-    var styleStr = "new ol.style.Style({" +
+    /*var styleStr = "new ol.style.Style({" +
         "stroke: new ol.style.Stroke({" +
         "color: '"+random_rgb()+"'," +
         "width: 1" +
@@ -164,8 +165,9 @@ var addLayer = function (layer, data) {
         "fill: new ol.style.Fill({ " +
         "color: '"+random_rgba()+"'" +
         "})" +
-        "});";
-    olMap.addVectorLayer(layer.layNm, serverMapHost + '/geoCalc/getMap', data.tblNm, data.srid, 3857, 0, 200, styleStr);
+        "});";*/
+    var styleStr = styleStrDef.format(random_rgb(),"1",random_rgba());
+    olMap.addVectorLayer(layer.layNm, serverMapHost + '/geoCalc/getMap', data.tblNm, data.srid, 3857, 0, 200, styleStr, null);
     grid.resetData(olMap.getLayerListJson('layer,baseLayer'));
 };
 
@@ -193,24 +195,61 @@ var toggleDataGrid = function () {
     $('#div-download').hide();
     $('#div-measure').hide();
     $('#div-addr').hide();
+    $('#div-style-text').hide();
 };
 var toggleDownload = function () {
     $('#div-data-grid').hide();
     $('#div-download').toggle();
     $('#div-measure').hide();
     $('#div-addr').hide();
+    $('#div-style-text').hide();
 };
 var toggleMeasure = function () {
     $('#div-data-grid').hide();
     $('#div-download').hide();
     $('#div-measure').toggle();
     $('#div-addr').hide();
+    $('#div-style-text').hide();
 };
 var toggleAddr = function () {
     $('#div-data-grid').hide();
     $('#div-download').hide();
     $('#div-measure').hide();
     $('#div-addr').toggle();
+    $('#div-style-text').hide();
 };
+var toggleStyleText = function () {
+    if($('#div-style-text').is(':visible')){
+        currentLayer = null;
+    } else {
+        var row = grid.getRow(grid.getFocusedCell().rowKey);
+        if(row == null) {
+            alert("레이어를 선택해주세요");
+            return;
+        }
+        if(row.type === "baseLayer") {
+            alert("base 레이어가 아닌 레이어를 선택해주세요");
+            return;
+        }
+        currentLayer = olMap.getLayersByName(row.name);
+        var styleText = currentLayer.get("style");
+        $('#input-style-text').val(styleText);
+    }
+    $('#div-data-grid').hide();
+    $('#div-download').hide();
+    $('#div-measure').hide();
+    $('#div-addr').hide();
+    $('#div-style-text').toggle();
+};
+
+var setStyleText = function () {
+    if(currentLayer != null){
+        var styleText = $('#input-style-text').val();
+        currentLayer.setStyle(eval(styleText));
+        currentLayer.set("style", styleText);
+    }
+    toggleStyleText();
+};
+
 
 

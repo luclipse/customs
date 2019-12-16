@@ -247,3 +247,19 @@ var toggleUploadGrid = function() {
     $('#div-dat-grid').hide();
     $('#div-upload-grid').toggle();
 };
+
+var deleteDat = function(){
+    var row = dataGrid.getRow(dataGrid.getFocusedCell().rowKey);
+    if(row == null) {
+        alert("데이터를 선택해주세요");
+        return;
+    }
+    if(confirm("삭제 하시겠습니까?")) {
+        var data = {datSno : row.datSno};
+        cmmApi.removeTcfDat(data, cbDeleteDat);
+    }
+};
+var cbDeleteDat = function(res){
+    alert(res.cd);
+    gridDataSet(null);
+};

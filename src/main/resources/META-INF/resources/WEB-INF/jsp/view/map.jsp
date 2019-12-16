@@ -101,7 +101,12 @@
             top: 7vh;
             width: 450px;
         }
-
+        .box {
+            position: fixed;
+            left: 300px;
+            top: 7vh;
+            width: 450px;
+        }
         .sidebar.down {
             position: fixed;
             left: 270px;
@@ -192,6 +197,9 @@
                 <li>
                     <a href="#" onclick="toggleAddr();" class="download">주소</a>
                 </li>
+                <li>
+                    <a href="#" onclick="toggleStyleText();" class="download">텍스트스타일</a>
+                </li>
             </ul>
         </nav>
         <div class="map-container">
@@ -248,9 +256,20 @@
             <button type="button" class="btn btn-secondary" onclick="$('#div-addr').hide(); return;">창 닫기</button>
         </div>
     </div>
-
-
-
+    <div id="div-style-text" class="card box" style="display: none;">
+        <div class="card-body">
+            <form>
+                <div class="form-group">
+                    <label for="input-style-text">스타일</label>
+                    <textarea class="form-control" id="input-style-text" rows="20"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-center">
+            <button type="button" class="btn btn-primary" onclick="setStyleText()">적용</button>
+            <button type="button" class="btn btn-secondary" onclick="toggleStyleText();">창 닫기</button>
+        </div>
+    </div>
    <%-- <div class="sidebars">
         <div class="sidebar down">
             <button onclick="draw.drawLayer('Point')">Point</button>
@@ -293,6 +312,7 @@
 <script type="text/javascript" src="../../../js/lib/tui.grid/tui-grid.js"></script>
 <script type="text/javascript" src="../../../js/lib/bootstrap-4.4.1/js/bootstrap.js"></script>
 <script type="text/javascript" src="../../../js/HashMap.js"></script>
+<script type="text/javascript" src="../../../js/util.js"></script>
 <script type="text/javascript" src="../../../js/map/mapUtil.js"></script>
 <script type="text/javascript" src="../../../js/map/mapApi.js"></script>
 <script type="text/javascript" src="../../../js/file/fileApi.js"></script>

@@ -207,9 +207,9 @@ var olMap = {
         olMap.olMap.getView().fit(extent, olMap.olMap.getSize());
     },
     getLayersByName : function (name) {
-        for (var i = 0; i < this.layerList.length; i++) {
+        for (var i = 0; i < olMap.layerList.length; i++) {
             if(olMap.layerList[i].get("name") === name) {
-                return olMap.layers[i];
+                return olMap.layerList[i];
             }
         }
         return null;

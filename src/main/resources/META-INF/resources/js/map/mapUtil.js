@@ -1,3 +1,13 @@
+var styleStrDef = "new ol.style.Style({" +
+    "stroke: new ol.style.Stroke({" +
+    "color: '{0}'," +
+    "width: {1}" +
+    "})," +
+    "fill: new ol.style.Fill({ " +
+    "color: '{2}'" +
+    "})" +
+    "});";
+
 var transformExtent = function (extent, from, to) {
     var source = 'EPSG:' + from;
     var destination = 'EPSG:' + to;

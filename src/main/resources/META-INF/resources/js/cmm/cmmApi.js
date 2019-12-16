@@ -31,6 +31,7 @@ var cmmApi = {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/saveTcfDat",
             data : data,
+            async : false,
             success: function (res) {
                 callback(res);
             }
@@ -40,6 +41,7 @@ var cmmApi = {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/removeTcfDat",
             data : data,
+            async : false,
             success: function (res) {
                 callback(res);
             }
@@ -77,6 +79,7 @@ var cmmApi = {
         $.ajax({
             url: serverMapCmmHost + "/tcfMap/saveTcfMap",
             data : data,
+            async : false,
             success: function (res) {
                 callback(res);
             }
@@ -86,6 +89,7 @@ var cmmApi = {
         $.ajax({
             url: serverMapCmmHost + "/tcfMap/removeTcfMap",
             data : data,
+            async : false,
             success: function (res) {
                 callback(res);
             }
@@ -122,6 +126,7 @@ var cmmApi = {
         $.ajax({
             url: serverMapCmmHost + "/tcfLay/saveTcfLay",
             data : data,
+            async : false,
             success: function (res) {
                 callback(res);
             }
@@ -131,6 +136,7 @@ var cmmApi = {
         $.ajax({
             url: serverMapCmmHost + "/tcfLay/removeTcfLay",
             data : data,
+            async : false,
             success: function (res) {
                 callback(res);
             }

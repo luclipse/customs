@@ -43,6 +43,7 @@
             <div class="card-footer">
                 <button type="button" class="btn btn-primary" id="btn-dat-card" onclick="toggleDatGrid()">새로운 데이터</button>
                 <button type="button" class="btn btn-primary" id="btn-upload-card" onclick="toggleUploadGrid()">파일 업로드</button>
+                <button type="button" class="btn btn-primary" id="btn-dat-delete" onclick="deleteDat()">데이터 삭제</button>
             </div>
         </div>
         <br>
