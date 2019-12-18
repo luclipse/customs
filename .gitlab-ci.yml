@@ -5,7 +5,7 @@ services:
 
 variables:
   DOCKER_DRIVER: overlay
-  SPRING_PROFILES_ACTIVE: gitlab-ci
+  SPRING_PROFILES_ACTIVE: dev
 
 stages:
   - build
@@ -24,9 +24,9 @@ maven-build:
 docker-build:
   stage: package
   script:
-  - docker build -t 192.168.0.11:5000/customs:v1 .
-  - docker push 192.168.0.11:5000/customs:v1
-  #- docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker build --build-arg SPRING_PROFILES_ACTIVE=dev  -t 192.168.0.11:5000/customs-dev:v1 .
+    - docker push  192.168.0.11:5000/customs-dev:v1
+    - docker build --build-arg SPRING_PROFILES_ACTIVE=test -t 182.252.135.90:5000/customs-test:v1 .
 
 #k8s-deploy:
 #  image: google/cloud-sdk

@@ -1,7 +1,7 @@
 # This file is a template, and might need editing before it works on your project.
 
 # Start with a base image containing Java runtime
-FROM start-java8:v1
+FROM 192.168.0.11:5000/start-java8:v1
 
 # Add Author info
 LABEL maintainer="lx's project developer"
@@ -15,6 +15,11 @@ EXPOSE 9000
 # The application's jar file
 # 이름만 변경해서 사용하세요 
 ARG JAR_FILE=target/customs-0.0.1-SNAPSHOT.jar
+
+# spring profiles
+ARG SPRING_PROFILES_ACTIVE
+RUN echo "PROFILE : "$SPRING_PROFILES_ACTIVE
+ENV SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE
 
 # Add the application's jar to the container
 ADD ${JAR_FILE} to-do-springboot.jar

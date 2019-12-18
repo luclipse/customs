@@ -1,0 +1,52 @@
+server:
+  port: 9000
+spring:
+  profiles:
+    active: default
+  application:
+    name: customs
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: false
+endpoints:
+  refresh:
+    enabled: true
+management:
+  security:
+    enabled: false
+---
+server:
+  port: 9000
+spring:
+  profiles: dev
+  application:
+    name: customs
+  cloud:
+    config:
+      uri: http://192.168.0.11:8888
+      fail-fast: false
+endpoints:
+  refresh:
+    enabled: true
+management:
+  security:
+    enabled: false
+---
+server:
+  port: 9000
+spring:
+  profiles: test
+  application:
+    name: customs
+  cloud:
+    config:
+      #uri: http://111.0.0.24:8888
+      uri: http://182.252.135.90:8888
+      fail-fast: false
+endpoints:
+  refresh:
+    enabled: true
+management:
+  security:
+    enabled: false
