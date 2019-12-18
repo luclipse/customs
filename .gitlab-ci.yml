@@ -10,7 +10,7 @@ variables:
 stages:
   - build
   - package
-  #- deploy
+  - deploy
 
 maven-build:
   image: 192.168.0.11:5000/gitlabci:v1
@@ -27,6 +27,16 @@ docker-build:
     - docker build --build-arg SPRING_PROFILES_ACTIVE=dev  -t 192.168.0.11:5000/customs-dev:v1 .
     - docker push  192.168.0.11:5000/customs-dev:v1
     - docker build --build-arg SPRING_PROFILES_ACTIVE=test -t 182.252.135.90:5000/customs-test:v1 .
+
+k8s-deploy:
+  image: 192.168.0.11:5000/gitlabci:v1
+  stage: deploy
+  script:
+    - echo "deploy start"
+    - curl http://192.168.0.11:9999/deployhelper/deploy/customs
+    - echo "deploy ok"
+
+
 
 #k8s-deploy:
 #  image: google/cloud-sdk
