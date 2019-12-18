@@ -170,10 +170,10 @@
         <div class="navbar-nav-scroll">
             <ul class="navbar-nav bd-navbar-nav flex-row">
                 <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="/map/">MAP</a>
+                    <a class="nav-link active" href="./../map/">MAP</a>
                 </li>
                 <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="/data/">DATA</a>
+                    <a class="nav-link active" href="./../data/">DATA</a>
                 </li>
             </ul>
         </div>
