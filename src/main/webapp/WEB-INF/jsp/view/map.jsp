@@ -14,10 +14,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>MAP</title>
-    <link rel="stylesheet" href="../../../js/lib/ol6/ol.css" type="text/css">
-    <link rel="stylesheet" href="../../../js/lib/tui.grid/tui-grid.css" type="text/css">
-    <link rel="stylesheet" href="../../../js/lib/bootstrap-4.4.1/css/bootstrap.css" type="text/css">
-    <link rel="stylesheet" href="../../../js/lib/bootstrap-4.4.1/css/sidebar.css" type="text/css">
+    <link rel="stylesheet" href="resources/js/lib/ol6/ol.css" type="text/css">
+    <link rel="stylesheet" href="resources/js/lib/tui.grid/tui-grid.css" type="text/css">
+    <link rel="stylesheet" href="resources/js/lib/bootstrap-4.4.1/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="resources/js/lib/bootstrap-4.4.1/css/sidebar.css" type="text/css">
     <style>
         html, body {
             margin: 0;
@@ -305,21 +305,21 @@
     var mapSrid = '3857';
     var addrSrid = '5181';
 </script>
-<script type="text/javascript" src="../../../js/lib/jquery/jquery-1.12.4.js"></script>
-<script type="text/javascript" src="../../../js/lib/jquery-sidebar/jquery.sidebar.js"></script>
-<script type="text/javascript" src="../../../js/lib/ol6/ol.js"></script>
-<script type="text/javascript" src="../../../js/lib/proj4/proj4.js"></script>
-<script type="text/javascript" src="../../../js/lib/tui.grid/tui-grid.js"></script>
-<script type="text/javascript" src="../../../js/lib/bootstrap-4.4.1/js/bootstrap.js"></script>
-<script type="text/javascript" src="../../../js/HashMap.js"></script>
-<script type="text/javascript" src="../../../js/util.js"></script>
-<script type="text/javascript" src="../../../js/map/mapUtil.js"></script>
-<script type="text/javascript" src="../../../js/map/mapApi.js"></script>
-<script type="text/javascript" src="../../../js/file/fileApi.js"></script>
-<script type="text/javascript" src="../../../js/map/measure.js"></script>
-<script type="text/javascript" src="../../../js/map/draw.js"></script>
-<script type="text/javascript" src="../../../js/map/olMap.js"></script>
-<script type="text/javascript" src="../../../js/cmm/cmmApi.js"></script>
-<script type="text/javascript" src="../../../js/view/map.js"></script>
-<%--<script src="../../../js/lib/geojson-vt/geojson-vt-dev.js"></script>--%>
+<script type="text/javascript" src="resources/js/lib/jquery/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="resources/js/lib/jquery-sidebar/jquery.sidebar.js"></script>
+<script type="text/javascript" src="resources/js/lib/ol6/ol.js"></script>
+<script type="text/javascript" src="resources/js/lib/proj4/proj4.js"></script>
+<script type="text/javascript" src="resources/js/lib/tui.grid/tui-grid.js"></script>
+<script type="text/javascript" src="resources/js/lib/bootstrap-4.4.1/js/bootstrap.js"></script>
+<script type="text/javascript" src="resources/js/HashMap.js"></script>
+<script type="text/javascript" src="resources/js/util.js"></script>
+<script type="text/javascript" src="resources/js/map/mapUtil.js"></script>
+<script type="text/javascript" src="resources/js/map/mapApi.js"></script>
+<script type="text/javascript" src="resources/js/file/fileApi.js"></script>
+<script type="text/javascript" src="resources/js/map/measure.js"></script>
+<script type="text/javascript" src="resources/js/map/draw.js"></script>
+<script type="text/javascript" src="resources/js/map/olMap.js"></script>
+<script type="text/javascript" src="resources/js/cmm/cmmApi.js"></script>
+<script type="text/javascript" src="resources/js/view/map.js"></script>
+<%--<script src="resources/js/lib/geojson-vt/geojson-vt-dev.js"></script>--%>
 </html>
