@@ -14,7 +14,7 @@ EXPOSE 9000
 
 # The application's jar file
 # 이름만 변경해서 사용하세요 
-ARG JAR_FILE=target/customs-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=target/customs-0.0.1-SNAPSHOT.war
 
 # spring profiles
 ARG SPRING_PROFILES_ACTIVE
@@ -22,8 +22,8 @@ RUN echo "PROFILE : "$SPRING_PROFILES_ACTIVE
 ENV SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE
 
 # Add the application's jar to the container
-ADD ${JAR_FILE} to-do-springboot.jar
+ADD ${JAR_FILE} to-do-springboot.war
 
 # Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/to-do-springboot.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/to-do-springboot.war"]
 

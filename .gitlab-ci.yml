@@ -19,7 +19,7 @@ maven-build:
   
   artifacts:
     paths:
-      - target/*.jar
+      - target/*.war
 
 docker-build:
   stage: package
