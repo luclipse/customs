@@ -6,7 +6,8 @@
   author   : 정호경
   since    : 2019.11.28
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +15,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>MAP</title>
-    <link rel="stylesheet" href="./../resources/js/lib/ol6/ol.css" type="text/css">
+    <%--<link rel="stylesheet" href="./../resources/js/lib/ol6/ol.css" type="text/css">--%>
+    <link rel="stylesheet" href="<c:url value='/resources/js/lib/ol6/ol.css'/>" type="text/css">
     <link rel="stylesheet" href="./../resources/js/lib/tui.grid/tui-grid.css" type="text/css">
     <link rel="stylesheet" href="./../resources/js/lib/bootstrap-4.4.1/css/bootstrap.css" type="text/css">
     <link rel="stylesheet" href="./../resources/js/lib/bootstrap-4.4.1/css/sidebar.css" type="text/css">
