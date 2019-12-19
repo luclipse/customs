@@ -15,9 +15,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>DATA</title>
-    <link rel="stylesheet" href="./../resources/js/lib/tui.grid/tui-grid.css" type="text/css">
-    <link rel="stylesheet" href="./../resources/js/lib/bootstrap-4.4.1/css/bootstrap.css" type="text/css">
-    <link rel="stylesheet" href="./../resources/js/lib/bootstrap-4.4.1/css/sidebar.css" type="text/css">
+    <link rel="stylesheet" href="<c:url value='/resources/js/lib/tui.grid/tui-grid.css'/>" type="text/css">
+    <link rel="stylesheet" href="<c:url value='/resources/js/lib/bootstrap-4.4.1/css/bootstrap.css'/>" type="text/css">
+    <link rel="stylesheet" href="<c:url value='/resources/js/lib/bootstrap-4.4.1/css/sidebar.css'/>" type="text/css">
 </head>
 
 <body onload="init()">
@@ -95,14 +95,14 @@
     var serverMapCmmHost = '${serverMapCmmHost}';
     var serverFileHost = '${serverFileHost}';
 </script>
-<script type="text/javascript" src="./../resources/js/lib/jquery/jquery-1.12.4.js"></script>
-<script type="text/javascript" src="./../resources/js/lib/jquery-sidebar/jquery.sidebar.js"></script>
-<script type="text/javascript" src="./../resources/js/lib/tui.grid/tui-grid.js"></script>
-<script type="text/javascript" src="./../resources/js/lib/bootstrap-4.4.1/js/bootstrap.js"></script>
-<script type="text/javascript" src="./../resources/js/HashMap.js"></script>
-<script type="text/javascript" src="./../resources/js/cmm/cmmApi.js"></script>
-<script type="text/javascript" src="./../resources/js/file/fileApi.js"></script>
-<script type="text/javascript" src="./../resources/js/lib/zip/zip.js"></script>
-<script type="text/javascript" src="./../resources/js/lib/zip/zip-ext.js"></script>
-<script type="text/javascript" src="./../resources/js/view/data.js"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/jquery/jquery-1.12.4.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/jquery-sidebar/jquery.sidebar.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/tui.grid/tui-grid.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/bootstrap-4.4.1/js/bootstrap.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/HashMap.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/cmm/cmmApi.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/file/fileApi.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/zip/zip.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/zip/zip-ext.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/view/data.js'/>"></script>
 </html>
