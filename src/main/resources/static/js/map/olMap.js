@@ -85,7 +85,6 @@ var olMap = {
                 zoom: zoom
             })
         });
-
         this.baseLayer.set("name", "base");
         this.baseLayer.set("type", "baseLayer");
         this.baseLayer.set("tblName", "");
@@ -99,8 +98,9 @@ var olMap = {
         if(this.getLayersByName(name) != null) {
             return "Already exists with the same name";
         }
-        var adm_style = eval(style);
-        var vector = mapApi.getVectorLayerExtend(name,url,layerName,fromPrj,toPrj, minResolution, maxResolution,adm_style,group);
+        var st = olStyle.getStrToStyle(style.styleText);
+        var vector = mapApi.getVectorLayerExtend(name,url,layerName,fromPrj,toPrj, minResolution, maxResolution,st,group);
+        vector.set("styleStr", olStyle.getStringStyle(st));
         vector.set("style", style);
         this.olMap.addLayer(vector);
         this.layerList.push(vector);

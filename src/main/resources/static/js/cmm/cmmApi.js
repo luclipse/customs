@@ -16,13 +16,13 @@ var cmmApi = {
             }
         });
     },
-    getTcfDatBySno : function (layer, callback) {
+    getTcfDatBySno : function (layer, style, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/getTcfDat",
             data : {datSno : layer.datSno},
             success: function (res) {
                 if(res.length > 0) {
-                    callback(layer, res[0]);
+                    callback(layer, style, res[0]);
                 }
             }
         });
@@ -135,6 +135,38 @@ var cmmApi = {
     removeTcfLay : function (data, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfLay/removeTcfLay",
+            data : data,
+            async : false,
+            success: function (res) {
+                callback(res);
+            }
+        });
+    },
+
+    getTcfLayStyleBySno : function (layer, callback) {
+        $.ajax({
+            url: serverMapCmmHost + "/tcfLayStyle/getTcfLayStyleBySno",
+            data : {laySno : layer.laySno},
+            success: function (style) {
+                callback(layer, style);
+            }
+        });
+    },
+    saveTcfLayStyle : function (data, callback) {
+        $.ajax({
+            url: serverMapCmmHost + "/tcfLayStyle/saveTcfLayStyle",
+            data : data,
+            async : false,
+            success: function (res) {
+                if(callback !== null) {
+                    callback(data);
+                }
+            }
+        });
+    },
+    removeTcfLayStyle : function (data, callback) {
+        $.ajax({
+            url: serverMapCmmHost + "/tcfLayStyle/removeTcfLayStyle",
             data : data,
             async : false,
             success: function (res) {

@@ -39,7 +39,7 @@ var mapApi = {
             format: new ol.format.GeoJSON(),
             url: function(extent) {
                 var ext = transformExtent(extent, toPrj, fromPrj);
-                return url + '?layerName='+layerName+'&bbox='+ext.join(',')+'&fromProj=EPSG:'+fromPrj+'&toProj=EPSG:'+toPrj;
+                return url + '?layerName='+layerName+'&bbox='+ext.join(',')+'&fromProj='+fromPrj+'&toProj='+toPrj;
             },
             strategy: ol.loadingstrategy.bbox,
             crossOrigin: "Anonymous"

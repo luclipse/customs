@@ -203,6 +203,9 @@
                 <li>
                     <a href="#" onclick="toggleStyleText();" class="download">텍스트스타일</a>
                 </li>
+                <li>
+                    <a href="#" onclick="toggleStyle();" class="download">스타일</a>
+                </li>
             </ul>
         </nav>
         <div class="map-container">
@@ -273,6 +276,26 @@
             <button type="button" class="btn btn-secondary" onclick="toggleStyleText();">창 닫기</button>
         </div>
     </div>
+    <div id="div-style" class="card box" style="display: none;">
+        <div class="card-body">
+            <form>
+                <div class="form-group">
+                    <label for="input-line-size">선 크기</label><input type="text" class="form-control" id="input-line-size">
+                    <section>
+                        <label for="input-line-size">선 색상</label>
+                        <button class="btn" id="a-line-color" style="height: 30px;width: 50px"></button>
+                        <label for="input-line-size">면 색상</label>
+                        <button class="btn" id="a-plane-color" style="height: 30px;width: 50px"></button>
+                    </section>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-center">
+            <button type="button" class="btn btn-primary" onclick="olStyle.setStyleSetting(currentLayer)">적용</button>
+            <button type="button" class="btn btn-secondary" onclick="toggleStyle();">창 닫기</button>
+        </div>
+    </div>
+
    <%-- <div class="sidebars">
         <div class="sidebar down">
             <button onclick="draw.drawLayer('Point')">Point</button>
@@ -313,7 +336,8 @@
 <script type="text/javascript" src="<c:url value='/resources/js/lib/ol6/ol.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/proj4/proj4.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/tui.grid/tui-grid.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/lib/bootstrap-4.4.1/js/bootstrap.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/vanilla-picker/vanilla-picker.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/cmm/cmmApi.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/HashMap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/util.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/map/mapUtil.js'/>"></script>
@@ -321,6 +345,7 @@
 <script type="text/javascript" src="<c:url value='/resources/js/file/fileApi.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/map/measure.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/map/draw.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/map/olStyle.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/map/olMap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/cmm/cmmApi.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/view/map.js'/>"></script>

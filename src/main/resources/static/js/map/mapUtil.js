@@ -9,15 +9,14 @@ var styleStrDef = "new ol.style.Style({" +
     "});";
 
 var transformExtent = function (extent, from, to) {
-    var source = 'EPSG:' + from;
-    var destination = 'EPSG:' + to;
+    var source = from;
+    var destination = to;
     return ol.proj.transformExtent(extent, source, destination);
 };
 
 var transformCoord = function (coord , from, to) {
-    var source = 'EPSG:' + from;
-    var destination = 'EPSG:' + to;
-    ol.proj.tr
+    var source = from;
+    var destination = to;
     return ol.proj.transform(coord, source, destination);
 };
 
