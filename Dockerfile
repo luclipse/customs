@@ -25,5 +25,5 @@ ENV SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE
 ADD ${JAR_FILE} to-do-springboot.war
 
 # Run the jar file
-ENTRYPOINT ["java","pname=customs","-Djava.security.egd=file:/dev/./urandom","-jar","/to-do-springboot.war"]
+ENTRYPOINT ["java","-Dpname=customs","-Djava.security.egd=file:/dev/./urandom","-jar","/to-do-springboot.war"]
 
