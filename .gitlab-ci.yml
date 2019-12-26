@@ -15,7 +15,8 @@ stages:
 maven-build:
   image: 192.168.0.11:5000/gitlabci:v1
   stage: build
-  script: "mvn package -B"
+  #script: "mvn package -B"
+  script: "mvn package -B -Dmaven.test.skip=true"
   
   artifacts:
     paths:
