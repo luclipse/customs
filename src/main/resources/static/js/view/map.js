@@ -280,12 +280,17 @@ var toggleStyle = function () {
             alert("base 레이어가 아닌 레이어를 선택해주세요");
             return;
         }
-
         currentLayer = olMap.getLayersByName(row.name);
-        olStyle.setColorPickerLineColor(currentLayer);
-        olStyle.setColorPickerFillColor(currentLayer);
-        olStyle.initStrokeWidth('input-line-size', currentLayer);
+        var geomType = currentLayer.get("geomType");
+        if(geomType === 'MultiPolygon' || geomType === 'Polygon') {
+            olStyle.setColorPickerLineColor(currentLayer);
+            olStyle.setColorPickerFillColor(currentLayer);
+            olStyle.initStrokeWidth('input-line-size', currentLayer);
+        } else if(geomType === 'MultiPoint' || geomType === 'Point'){
 
+        } else if(geomType === 'MultiLineString' || geomType === 'LineString'){
+
+        }
     }
     $('#div-data-grid').hide();
     $('#div-download').hide();
