@@ -11,8 +11,7 @@ management:
     web:
       base-path: /actuator 
       exposure:
-        # actuator의 refresh를 사용할 수 있게 해줍니다. 뒤에서 설명합니다.
-        include: ['refresh','hystrix.stream']
+        include: '*'
   security:
     enabled: false
 
