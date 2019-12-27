@@ -1,52 +1,50 @@
-server:
-  port: 9000
 spring:
+  port: 9000
   profiles:
     active: default
   application:
+    # /{application}/{profile}/{label}을 생각해서 애플리케이션 이름을 정해줍니다.
     name: customs
-  cloud:
-    config:
-      uri: http://localhost:8888
-      fail-fast: false
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator 
+      exposure:
+        # actuator의 refresh를 사용할 수 있게 해줍니다. 뒤에서 설명합니다.
+        include: ['refresh','hystrix.stream']
+  security:
+    enabled: false
+
 endpoints:
   refresh:
     enabled: true
-management:
-  security:
-    enabled: false
 ---
-server:
-  port: 9000
 spring:
-  profiles: dev
-  application:
-    name: customs
+  profiles: default
   cloud:
     config:
       uri: http://192.168.0.11:8888
       fail-fast: false
-endpoints:
-  refresh:
-    enabled: true
-management:
-  security:
-    enabled: false
 ---
-server:
-  port: 9000
 spring:
-  profiles: test
-  application:
-    name: customs
+  profiles: dev
   cloud:
     config:
-      #uri: http://111.0.0.24:8888
+      uri: http://192.168.0.11:8888
+      fail-fast: false
+---
+spring:
+  profiles: test
+  cloud:
+    config:
+      uri: http://192.168.0.11:8888
+      fail-fast: false
+---
+spring:
+  profiles: cloud
+  cloud:
+    config:
       uri: http://182.252.135.90:8888
       fail-fast: false
-endpoints:
-  refresh:
-    enabled: true
-management:
-  security:
-    enabled: false
+
