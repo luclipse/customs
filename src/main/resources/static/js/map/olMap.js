@@ -94,12 +94,12 @@ var olMap = {
         this.layers.baseLayer = this.baseLayer;
     },
 
-    addVectorLayer : function (name, url, layerName, fromPrj, toPrj, minResolution, maxResolution, style, group) {
+    addVectorLayer : function (name, url, layerName, fromPrj, toPrj, minResolution, maxResolution, style, group, geomType) {
         if(this.getLayersByName(name) != null) {
             return "Already exists with the same name";
         }
         var st = olStyle.getStrToStyle(style.styleText);
-        var vector = mapApi.getVectorLayerExtend(name,url,layerName,fromPrj,toPrj, minResolution, maxResolution,st,group);
+        var vector = mapApi.getVectorLayerExtend(name,url,layerName,fromPrj,toPrj, minResolution, maxResolution, st, group, geomType);
         vector.set("styleStr", olStyle.getStringStyle(st));
         vector.set("style", style);
         this.olMap.addLayer(vector);
@@ -235,11 +235,7 @@ var olMap = {
                     type: olMap.layerList[i].get("type"),
                     tblName: olMap.layerList[i].get("tblName"),
                     srid: olMap.layerList[i].get("srid"),
-                    /*
-                    _attributes: {
-                        expanded: true
-                    }
-                    */
+                    geomType: olMap.layerList[i].get("geomType"),
                 };
                 resList.push(data);
             }
@@ -251,9 +247,7 @@ var olMap = {
                     type: datas[i].get("type"),
                     tblName: datas[i].get("tblName"),
                     srid: datas[i].get("srid"),
-                    /*_attributes: {
-                        expanded: true
-                    }*/
+                    geomType: datas[i].get("geomType"),
                 };
                 resList.push(data);
             }

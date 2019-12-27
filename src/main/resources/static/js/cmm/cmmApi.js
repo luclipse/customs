@@ -141,13 +141,13 @@ var cmmApi = {
             }
         });
     },
-    saveTcfLay : function (data, callback) {
+    saveTcfLay : function (data, callback, tcfDat) {
         $.ajax({
             url: serverMapCmmHost + "/tcfLay/saveTcfLay",
             data : data,
             async : false,
             success: function (res) {
-                callback(res);
+                callback(res, tcfDat);
             }
         });
     },

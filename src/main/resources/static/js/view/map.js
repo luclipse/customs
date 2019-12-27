@@ -123,12 +123,19 @@ var addNewLayer = function () {
         layVisYn : 'Y',
         layIdx : idx
     };
-    cmmApi.saveTcfLay(data, cbAddNewLayerStyle);
+    cmmApi.saveTcfLay(data, cbAddNewLayerStyle, row);
 };
 
 // 새로운 레이어 스타일 추가 콜백
-var cbAddNewLayerStyle = function (res) {
-    var style = olStyle.getPolygonStyle(olStyle.getStroke(random_rgb(), 1) , olStyle.getFillStyle(random_rgba()));
+var cbAddNewLayerStyle = function (res, dat) {
+    var style = '';
+    if(dat.geomType === 'MultiPolygon' || dat.geomType === 'Polygon') {
+        style = olStyle.getPolygonStyle(olStyle.getStroke(random_rgb(), 1) , olStyle.getFillStyle(random_rgba()));
+    } else if(dat.geomType === 'MultiPoint' || dat.geomType === 'Point'){
+        style = olStyle.getSvgCircleStyle(random_rgb(), 1,random_rgb(), 5);
+    } else if(dat.geomType === 'MultiLineString' || dat.geomType === 'LineString'){
+        style = olStyle.getLineStyle(olStyle.getStroke(random_rgb(), 1));
+    }
     var data = {
         laySno : res.laySno,
         styleText : olStyle.getStringStyle(style)
@@ -155,7 +162,7 @@ var getLayerToStyle = function (layer) {
 
 //레이어 추가함.
 var addLayer = function (layer, style, data) {
-    olMap.addVectorLayer(layer.layNm, serverMapHost + '/geoCalc/getMap', data.tblNm, data.srid, 'EPSG:3857', 0, 200, style, null);
+    olMap.addVectorLayer(layer.layNm, serverMapHost + '/geoCalc/getMap', data.tblNm, data.srid, 'EPSG:3857', 0, 200, style, null, data.geomType);
     grid.resetData(olMap.getLayerListJson('layer,baseLayer'));
     $('#div-data-grid').hide();
 };

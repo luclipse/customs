@@ -1,4 +1,8 @@
 var olStyle = {
+    svgCircle : '<svg width="{0}" height="{1}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+                '<circle cx="{2}" cy="{3}" r="{4}" stroke="{5}" stroke-width="{6}" fill="{7}"/>' +
+                '</svg>',
+
     popupLineColor : null,
     lineColor : null,
 
@@ -83,11 +87,28 @@ var olStyle = {
         });
     },
 
-    getCircle : function (strokeColor, strokeWidth, fillColor, radius) {
-        return new ol.style.Circle({
-            radius: radius,
-            fill: this.getFillStyle(fillColor),
-            stroke: this.getStroke(strokeColor, strokeWidth)
+    getSvgCircleStyle : function (strokeColor, strokeWidth, fillColor, radius) {
+        var size = (radius * 2) + (strokeWidth * 2);
+        var cxy = radius + strokeWidth;
+        return new ol.style.Style({
+            image: new ol.style.Icon({
+                anchor: [cxy, cxy],
+                anchorXUnits: 'pixels',
+                anchorYUnits: 'pixels',
+                opacity: 1,
+                src: 'data:image/svg+xml;utf8,' + this.svgCircle.format(size, size, cxy, cxy, radius, strokeColor, strokeWidth, fillColor)
+            })
+        });
+    },
+    getImageStyle : function (anchorX, anchorY, src) {
+        return new ol.style.Style({
+            image: new ol.style.Icon({
+                anchor: [anchorX, anchorY],
+                anchorXUnits: 'pixels',
+                anchorYUnits: 'pixels',
+                opacity: 1,
+                src: src
+            })
         });
     },
     getPolygonStyle : function (stroke, fill) {
@@ -96,13 +117,22 @@ var olStyle = {
                 fill : fill
         });
     },
+
+    getLineStyle : function (stroke) {
+        return new ol.style.Style({
+            stroke : stroke
+        });
+    },
+
     getStringStyle : function (style) {
         return JSON.stringify(style).replace(/_/gi, "");
     },
     getStrToStyle : function (styleStr) {
         var mFill = null;
         var mStroke = null;
-        var mImage = null;
+        var mImageAnchorX = null;
+        var mImageAnchorY = null;
+        var mImageSrc = null;
         var mText = null;
         $.each(JSON.parse(styleStr), function(key, value){
             if(value != null) {
@@ -111,17 +141,19 @@ var olStyle = {
                 } else if(key === "stroke") {
                     mStroke = olStyle.getStroke(value.color, value.width);
                 } else if(key === "image") {
-                    $.each(value, function(key, value){
-                        // todo image(심벌) 개발..
-                    });
+                    mImageAnchorX = value.anchor[0];
+                    mImageAnchorY = value.anchor[0];
+                    mImageSrc = value.iconImage.src;
                 }
             }
         });
         var res = null;
-        if(mImage === null) {
+        if(mStroke !== null && mFill !== null) {
             res = olStyle.getPolygonStyle(mStroke, mFill);
-        } else {
-            // todo image(심벌) 개발..
+        } else if(mStroke !== null ) {
+            res = olStyle.getLineStyle(mStroke);
+        } else if(mImageAnchorX !== null && mImageAnchorY !== null && mImageSrc !== null) {
+            res = olStyle.getImageStyle(mImageAnchorX, mImageAnchorY, mImageSrc);
         }
         return res;
     },

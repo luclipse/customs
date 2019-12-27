@@ -42,7 +42,7 @@ var mapApi = {
             }
         });
     },
-    getVectorLayerExtend : function  (name, url, layerName, fromPrj, toPrj, minResolution, maxResolution, style, group) {
+    getVectorLayerExtend : function  (name, url, layerName, fromPrj, toPrj, minResolution, maxResolution, style, group, geomType) {
         var source = new ol.source.Vector({
             format: new ol.format.GeoJSON(),
             url: function(extent) {
@@ -62,12 +62,13 @@ var mapApi = {
         vector.set("tblName", layerName);
         vector.set("type", "layer");
         vector.set("srid", fromPrj);
+        vector.set("geomType", geomType);
         //vector.setMaxZoom(maxZoom);
         if(group != null) {
             //todo 레이어 그룹
         }
         return vector;
-    }
+    },
 };
 
 
