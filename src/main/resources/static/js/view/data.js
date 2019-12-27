@@ -51,7 +51,6 @@ var saveDat = function (inputs) {
 };
 
 var cbSaveDat = function(res){
-    alert(res.cd);
     gridDataSet(null);
 };
 
@@ -260,6 +259,5 @@ var deleteDat = function(){
     }
 };
 var cbDeleteDat = function(res){
-    alert(res.cd);
     gridDataSet(null);
 };

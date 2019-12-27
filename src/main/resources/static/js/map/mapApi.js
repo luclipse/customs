@@ -9,8 +9,12 @@ var mapApi = {
                 , cdColumnName : cdColumnName
                 , coord : coord[0] + ", " + coord[1]
             },
-            success: function (result) {
-                callback(result, uiId, addrValue);
+            success: function (res) {
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    callback(res.data, uiId, addrValue);
+                } else {
+
+                }
             }
         });
     },
@@ -23,14 +27,18 @@ var mapApi = {
                 , cdColumnName : cdColumnName
                 , cdValue : cdValue
             },
-            success: function (result) {
-                var extent = [
-                    result.xmin,
-                    result.ymin,
-                    result.xmax,
-                    result.ymax,
-                ];
-                callback(extent);
+            success: function (res) {
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    var extent = [
+                        res.data.xmin,
+                        res.data.ymin,
+                        res.data.xmax,
+                        res.data.ymax,
+                    ];
+                    callback(extent);
+                } else {
+
+                }
             }
         });
     },

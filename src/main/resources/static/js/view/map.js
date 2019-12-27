@@ -140,7 +140,7 @@ var cbAddNewLayerStyle = function (res) {
 var cbAddNewLayer =function(style){
     var row = dataGrid.getRow(dataGrid.getFocusedCell().rowKey);
     var layer = {layNm : row.datNm};
-    addLayer(layer,style, row);
+    addLayer(layer, style, row);
 };
 
 // 레이어 값을 이용하여 데이터 정보를 가져옴

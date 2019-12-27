@@ -1,54 +1,73 @@
 var cmmApi = {
-    getTcfDatList : function (callback) {
+    CD_FAILURE : 'FAILURE',
+    CD_SUCCESS : 'SUCCESS',
+
+    getTcfDatList : function (callback, failCallback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/getTcfDatList",
             success: function (res) {
-                callback(res);
-            }
-        });
-    },
-    getTcfDat : function (data, callback) {
-        $.ajax({
-            url: serverMapCmmHost + "/tcfDat/getTcfDat",
-            data : data,
-            success: function (res) {
-                callback(res);
-            }
-        });
-    },
-    getTcfDatBySno : function (layer, style, callback) {
-        $.ajax({
-            url: serverMapCmmHost + "/tcfDat/getTcfDat",
-            data : {datSno : layer.datSno},
-            success: function (res) {
-                if(res.length > 0) {
-                    callback(layer, style, res[0]);
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    callback(res.data);
+                } else {
+                    //failCallback(res.data);
                 }
             }
         });
     },
-    saveTcfDat : function (data, callback) {
+    getTcfDat : function (data, callback, failCallback) {
+        $.ajax({
+            url: serverMapCmmHost + "/tcfDat/getTcfDat",
+            data : data,
+            success: function (res) {
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    callback(res.data);
+                } else {
+                    //failCallback(res.data);
+                }
+            }
+        });
+    },
+    getTcfDatBySno : function (layer, style, callback, failCallback) {
+        $.ajax({
+            url: serverMapCmmHost + "/tcfDat/getTcfDatBySno",
+            data : {datSno : layer.datSno},
+            success: function (res) {
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    callback(layer,style,res.data);
+                } else {
+                    //failCallback(res.data);
+                }
+            }
+        });
+    },
+    saveTcfDat : function (data, callback, failCallback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/saveTcfDat",
             data : data,
             async : false,
             success: function (res) {
-                callback(res);
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    callback(res.data);
+                } else {
+                    //failCallback(res.data);
+                }
             }
         });
     },
-    removeTcfDat : function (data, callback) {
+    removeTcfDat : function (data, callback, failCallback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/removeTcfDat",
             data : data,
             async : false,
             success: function (res) {
-                callback(res);
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    callback(res.data);
+                } else {
+                    //failCallback(res.data);
+                }
             }
         });
     },
-
-
     getTcfMapList : function (callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfMap/getTcfMapList",
