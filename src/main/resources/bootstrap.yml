@@ -1,10 +1,12 @@
-spring:
+server:
   port: 9000
+
+spring:
   profiles:
     active: default
   application:
-    # /{application}/{profile}/{label}을 생각해서 애플리케이션 이름을 정해줍니다.
     name: customs
+    # /{application}/{profile}/{label}을 생각해서 애플리케이션 이름을 정해줍니다.
 
 management:
   endpoints:
@@ -23,7 +25,7 @@ spring:
   profiles: default
   cloud:
     config:
-      uri: http://192.168.0.11:8888
+      uri: http://localhost:8888
       fail-fast: false
 ---
 spring:
@@ -37,7 +39,7 @@ spring:
   profiles: test
   cloud:
     config:
-      uri: http://192.168.0.11:8888
+      uri: http://182.252.135.90:8888
       fail-fast: false
 ---
 spring:
@@ -46,4 +48,3 @@ spring:
     config:
       uri: http://182.252.135.90:8888
       fail-fast: false
-
