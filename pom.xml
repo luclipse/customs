@@ -109,7 +109,7 @@
     </build>
 
     <repositories>
-        <repository>
+        <!--<repository>
             <id>nexus</id>
             <url>http://192.168.0.11:30280/nexus/content/groups/public/</url>
             <releases>
@@ -118,7 +118,7 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
+        </repository>-->
 
         <repository>
             <id>spring-milestones</id>
@@ -127,7 +127,7 @@
         </repository>
     </repositories>
 
-    <pluginRepositories>
+    <!--<pluginRepositories>
         <pluginRepository>
             <id>nexus</id>
             <url>http://192.168.0.11:30280/nexus/content/groups/public/</url>
@@ -138,6 +138,6 @@
                 <enabled>true</enabled>
             </snapshots>
         </pluginRepository>
-    </pluginRepositories>
+    </pluginRepositories>-->
 
 </project>
