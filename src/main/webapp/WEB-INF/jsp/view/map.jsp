@@ -280,7 +280,12 @@
         <div class="card-body">
             <form>
                 <div class="form-group">
-                    <label for="input-line-size">선 크기</label><input type="text" class="form-control" id="input-line-size">
+                    <div>
+                        <label for="input-line-size">선 크기</label><input type="text" class="form-control" id="input-line-size">
+                    </div>
+                    <div id="div-radius-size" >
+                        <label for="input-radius-size">점 크기</label><input type="text" class="form-control" id="input-radius-size">
+                    </div>
                     <section>
                         <label for="input-line-size">선 색상</label>
                         <button class="btn" id="a-line-color" style="height: 30px;width: 50px"></button>
@@ -291,7 +296,7 @@
             </form>
         </div>
         <div class="card-footer text-center">
-            <button type="button" class="btn btn-primary" onclick="olStyle.setStyleSetting(currentLayer)">적용</button>
+            <button type="button" class="btn btn-primary" onclick="olStyle.setStyle(currentLayer)">적용</button>
             <button type="button" class="btn btn-secondary" onclick="toggleStyle();">창 닫기</button>
         </div>
     </div>
@@ -337,6 +342,7 @@
 <script type="text/javascript" src="<c:url value='/resources/js/lib/proj4/proj4.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/tui.grid/tui-grid.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/vanilla-picker/vanilla-picker.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/xmlToJson/xmlToJson.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/cmm/cmmApi.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/HashMap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/util.js'/>"></script>
