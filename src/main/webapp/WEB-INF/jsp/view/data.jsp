@@ -37,9 +37,36 @@
         <br>
         <h1>데이터</h1>
         <br>
-        <div class="card">
+        <%--<div class="card">
             <div class="card-body">
                 <div id="dataGrid"></div>
+            </div>
+        </div>--%>
+        <div class="card">
+            <div class="card-body">
+                <table class="table" id="">
+                    <colgroup>
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 5%;">
+                        <col span="1" style="width: 30%;">
+                        <col span="1" style="width: 30%;">
+                        <col span="1" style="width: 15%;">
+                        <col span="1" style="width: 10%;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th scope="col" ></th>
+                            <th scope="col" ></th>
+                            <th scope="col" class="text-center">이름</th>
+                            <th scope="col" class="text-center">최종수정시간</th>
+                            <th scope="col" class="text-center">데이터수</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-data">
+
+                    </tbody>
+                </table>
             </div>
             <div class="card-footer">
                 <button type="button" class="btn btn-primary" id="btn-dat-card" onclick="toggleDatGrid()">새로운 데이터</button>
@@ -96,6 +123,7 @@
     var serverFileHost = '${serverFileHost}';
 </script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/jquery/jquery-1.12.4.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/popper/popper.min.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/jquery-sidebar/jquery.sidebar.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/tui.grid/tui-grid.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/bootstrap-4.4.1/js/bootstrap.js'/>"></script>

@@ -3,9 +3,11 @@ var zipFileInput = document.getElementById("zipFile");
 var sridInput = document.getElementById("input-srid");
 var fileList = [];
 var fileType = "";
+var tableDataId = 'table-data';
+var tcfDatList = null;
 
 var init = function () {
-    dataGrid = new tui.Grid({
+    /*dataGrid = new tui.Grid({
         el: document.getElementById('dataGrid'), // Container element
         scrollX: false,
         scrollY: false,
@@ -24,10 +26,9 @@ var init = function () {
             },
 
         ],
-    });
-    tui.Grid.applyTheme('clean');
+    });*/
+    //tui.Grid.applyTheme('clean');
     gridDataSet(null);
-
 };
 
 var gridDataSet = function (data) {
@@ -39,7 +40,48 @@ var gridDataSet = function (data) {
 };
 
 var cbGridDataSet = function (tcfDatList) {
-    dataGrid.resetData(tcfDatList);
+    this.tcfDatList = tcfDatList;
+    //dataGrid.resetData(tcfDatList);
+    var tableData = $('#'+tableDataId);
+    var html = '';
+    tableData.empty();
+    if(tcfDatList.length <= 0){
+        html =
+            ' <tr>' +
+            '      <td colspan="5" class="text-center"><h3>데이터 없음</h3></td>' +
+            '</tr>';
+        tableData.append(html);
+    } else {
+        var idx = 1;
+        tcfDatList.forEach(function (item, idx) {
+            html =
+                '<tr>' +
+                    '<td>'+ (idx+1) +'</td>' +
+                    '<td><input type="checkbox" id="cb_tcfdat_'+idx+'" value="'+idx+'"></td>' +
+                    '<td class="text-center">'+ item.datNm +'</td>' +
+                    '<td class="text-center">'+ item.mdfDt +'</td>' +
+                    '<td class="text-center">'+ item.datCnt +'</td>' +
+                    '<td class="text-center">' +
+                    '<div class="dropdown">' +
+                        '<button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                            '설정' +
+                        '</button>' +
+                        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+                        '<a class="dropdown-item" href="#" onclick="settingTcfDat('+idx+',\'del\')">삭제</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
+                '</tr>';
+            tableData.append(html);
+        });
+    }
+};
+var settingTcfDat = function(idx, action) {
+    var data = this.tcfDatList[idx];
+    if(action === 'del'){
+        _deleteDat(data.datSno);
+    }
+    //todo 셋팅 메뉴 개발해야함.
 };
 
 var saveDat = function (inputs) {
@@ -249,15 +291,22 @@ var toggleUploadGrid = function() {
 
 var deleteDat = function(){
     var row = dataGrid.getRow(dataGrid.getFocusedCell().rowKey);
-    if(row == null) {
+    var datSno = null;
+    if(row != null) {
+        datSno = row.datSno;
+    }
+    _deleteDat(datSno);
+};
+var _deleteDat = function (datSno) {
+    if(datSno == null) {
         alert("데이터를 선택해주세요");
         return;
     }
     if(confirm("삭제 하시겠습니까?")) {
-        var data = {datSno : row.datSno};
+        var data = {datSno : datSno};
         cmmApi.removeTcfDat(data, cbDeleteDat);
     }
-};
+}
 var cbDeleteDat = function(res){
     gridDataSet(null);
 };
