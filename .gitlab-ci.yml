@@ -28,6 +28,7 @@ docker-build:
     - docker build --build-arg SPRING_PROFILES_ACTIVE=dev  -t 192.168.0.11:5000/customs-dev:v1 .
     - docker push  192.168.0.11:5000/customs-dev:v1
     - docker build --build-arg SPRING_PROFILES_ACTIVE=test -t 192.168.0.11:5000/customs-test:v1 .
+    - docker push  192.168.0.11:5000/customs-test:v1
 
 k8s-deploy:
   image: 192.168.0.11:5000/gitlabci:v1
