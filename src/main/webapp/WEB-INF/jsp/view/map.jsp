@@ -190,6 +190,7 @@
                 레이어 추가
             </button>
             <div id="grid" style="width:300px;"></div>
+            <div id="div-layer" style="width:300px;"></div>
             <ul class="list-unstyled CTAs">
                 <li>
                     <a href="#" onclick="toggleDownload();" class="download">다운로드</a>
