@@ -30,8 +30,8 @@ var _initMapList = function(maps){
             '<div class="col-sm-4" style="margin-top: 20px" id="div-mapno-'+map.mapSno+'">' +
                 '<div class="card">' +
                     '<div class="card-body">' +
-                        '<h5 class="card-title">'+map.mapNm+'</h5>' +
-                        '<p class="card-text">'+desc+'</p>' +
+                        '<h5 class="card-title text-truncate">'+map.mapNm+'</h5>' +
+                        '<p class="card-text text-truncate" >'+desc+'</p>' +
                     '</div>' +
                     '<div class="card-footer">' +
                         '<div style="float: right">'+
@@ -70,7 +70,7 @@ var saveMap = function(){
     var mapDesc = $('#'+inputMapDescId).val();
     var mapSno = $('#'+inputMapSnoId).val();
     var text = "등록";
-    if(mapSno != null || mapSno != ''){
+    if(mapSno != null && mapSno != ''){
         text = "수정";
     }
     if(mapNm === ''){
@@ -109,5 +109,8 @@ var _delMap = function(){
 
 var closeInputModal = function () {
     $('#'+ modalMapInputId).modal('hide');
+    $('#'+inputMapSnoId).val('');
+    $('#'+inputMapNameId).val('');
+    $('#'+inputMapDescId).val('');
     $('#'+btnInputSaveId).html("생성");
 };
