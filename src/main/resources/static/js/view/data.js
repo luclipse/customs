@@ -54,16 +54,23 @@ var cbGridDataSet = function (tcfDatList) {
     } else {
         var idx = 1;
         tcfDatList.forEach(function (item, idx) {
+            var d = new Date(item.mdfDt),
+                dformat = [d.getFullYear(),(d.getMonth()+1).padLeft(),
+                        d.getDate().padLeft()].join('-') +' ' +
+                    [d.getHours().padLeft(),
+                        d.getMinutes().padLeft(),
+                        d.getSeconds().padLeft()].join(':');
+
             html =
                 '<tr>' +
                     '<td>'+ (idx+1) +'</td>' +
                     '<td><input type="checkbox" id="cb_tcfdat_'+idx+'" value="'+idx+'"></td>' +
                     '<td class="text-center">'+ item.datNm +'</td>' +
-                    '<td class="text-center">'+ item.mdfDt +'</td>' +
+                    '<td class="text-center">'+ dformat +'</td>' +
                     '<td class="text-center">'+ item.datCnt +'</td>' +
                     '<td class="text-center">' +
                     '<div class="dropdown">' +
-                        '<button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                        '<button class="btn btn-primary btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
                             '설정' +
                         '</button>' +
                         '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +

@@ -25,10 +25,10 @@
         <div class="navbar-nav-scroll">
             <ul class="navbar-nav bd-navbar-nav flex-row">
                 <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="./../map/">MAP</a>
+                    <a class="nav-link active" href="<c:url value='/maplist/'/>">MAP</a>
                 </li>
                 <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="./../data/">DATA</a>
+                    <a class="nav-link active" href="<c:url value='/data/'/>">DATA</a>
                 </li>
             </ul>
         </div>
@@ -128,6 +128,7 @@
 <script type="text/javascript" src="<c:url value='/resources/js/lib/tui.grid/tui-grid.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/bootstrap-4.4.1/js/bootstrap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/HashMap.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/util.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/cmm/cmmApi.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/file/fileApi.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/zip/zip.js'/>"></script>

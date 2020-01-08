@@ -29,7 +29,7 @@ var _initMapList = function(maps){
         $DivMapListId.append(
             '<div class="col-sm-4" style="margin-top: 20px" id="div-mapno-'+map.mapSno+'">' +
                 '<div class="card">' +
-                    '<div class="card-body">' +
+                    '<div class="card-body" style="cursor:pointer" onclick="viewMap('+map.mapSno+')">' +
                         '<h5 class="card-title text-truncate">'+map.mapNm+'</h5>' +
                         '<p class="card-text text-truncate" >'+desc+'</p>' +
                     '</div>' +
@@ -113,4 +113,9 @@ var closeInputModal = function () {
     $('#'+inputMapNameId).val('');
     $('#'+inputMapDescId).val('');
     $('#'+btnInputSaveId).html("생성");
+};
+
+var viewMap = function (idx) {
+    console.log(idx);
+    location.href= baseUrl + "map/?mapSno=" + idx;
 };

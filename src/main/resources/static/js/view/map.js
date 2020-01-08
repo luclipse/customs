@@ -3,7 +3,6 @@ var locSigungu;
 var locAdm;
 var grid;
 var dataGrid;
-var mapSno = 1; //임시 맵 sno
 var currentLayer = null;
 
 var init = function () {
