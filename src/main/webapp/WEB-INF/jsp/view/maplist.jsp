@@ -23,21 +23,20 @@
     <link rel="stylesheet" href="<c:url value='/resources/js/lib/bootstrap-4.4.1/css/sidebar.css'/>" type="text/css">
 
 </head>
-<body onload="init()">
-    <header class="navbar navbar-dark bg-dark" style="height: 7vh;margin-bottom:0px">
-        <div class="navbar-nav-scroll">
-            <ul class="navbar-nav bd-navbar-nav flex-row">
-                <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="<c:url value='/maplist/'/>">MAP</a>
-                </li>
-                <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="<c:url value='/data/'/>">DATA</a>
-                </li>
-            </ul>
-        </div>
-    </header>
+<body onload="init()" class="bg-light">
+    <div class="navbar navbar-dark bg-dark" style="justify-content: flex-start;">
+        <a class="navbar-brand" href="#">LXPF</a>
+        <ul class="navbar-nav bd-navbar-nav flex-row">
+            <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
+                <a class="nav-link active" href="<c:url value='/maplist/'/>">지도 목록</a>
+            </li>
+            <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
+                <a class="nav-link active" href="<c:url value='/data/'/>">데이터</a>
+            </li>
+        </ul>
+    </div>
     <div class="container">
-        <div style="padding-top: 30px"></div>
+        <div style="padding-top: 20px"></div>
         <div class="row">
             <div class="col-10">
                 <h2>지도</h2>
@@ -48,8 +47,8 @@
                 </button>
             </div>
         </div>
-        <div style="padding-top: 30px"></div>
-        <div class="row" id="div-map-list">
+        <div style="padding-top: 20px"></div>
+        <div class="row my-3 p-3 bg-white rounded box-shadow" id="div-map-list">
         </div>
     </div>
     <div class="modal fade" id="modal-map-input" tabindex="-1" role="dialog" aria-labelledby="modal-map-label" aria-hidden="true">
@@ -88,7 +87,8 @@
     var serverMapHost = '${serverMapHost}';
     var serverMapCmmHost = '${serverMapCmmHost}';
     var serverFileHost = '${serverFileHost}';
-    var baseUrl = '<c:url value='/'/>';
+    var baseUrl = '${pageContext.request.contextPath}';
+
 </script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/jquery/jquery-1.12.4.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/bootstrap-4.4.1/js/bootstrap.js'/>"></script>

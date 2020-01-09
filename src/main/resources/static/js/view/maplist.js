@@ -117,5 +117,5 @@ var closeInputModal = function () {
 
 var viewMap = function (idx) {
     console.log(idx);
-    location.href= baseUrl + "map/?mapSno=" + idx;
+    location.href= baseUrl + "/map/?mapSno=" + idx;
 };

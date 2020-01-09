@@ -20,62 +20,71 @@
     <link rel="stylesheet" href="<c:url value='/resources/js/lib/bootstrap-4.4.1/css/sidebar.css'/>" type="text/css">
 </head>
 
-<body onload="init()">
-    <header class="navbar navbar-dark bg-dark" style="height: 7vh;margin-bottom:0px">
-        <div class="navbar-nav-scroll">
-            <ul class="navbar-nav bd-navbar-nav flex-row">
-                <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="<c:url value='/maplist/'/>">MAP</a>
-                </li>
-                <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="<c:url value='/data/'/>">DATA</a>
-                </li>
-            </ul>
+<body onload="init()" class="bg-light">
+    <div class="navbar navbar-dark bg-dark" style="margin-bottom: 0;justify-content: flex-start;">
+        <a class="navbar-brand" href="#">LXPF</a>
+        <ul class="navbar-nav bd-navbar-nav flex-row">
+            <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
+                <a class="nav-link active" href="<c:url value='/maplist/'/>">지도 목록</a>
+            </li>
+            <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
+                <a class="nav-link active" href="<c:url value='/data/'/>">데이터</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="nav-scroller bg-white box-shadow" >
+        <nav class="nav nav-underline">
+            <a class="nav-link" href="#" onclick="divDatListShow()">현재 데이터 목록</a>
+            <a class="nav-link" href="#" onclick="divTableListShow()">연결된 데이터</a>
+        </nav>
+    </div>
+    <div class="container" id="div-dat-list">
+        <div style="padding-top: 20px"></div>
+        <div class="row">
+            <div class="col-9">
+                <h3>현재 데이터 목록</h3>
+            </div>
+            <div class="col-3">
+                <button type="button" class="btn btn-primary" id="btn-dat-card" onclick="toggleDatGrid('show')">새로운 데이터</button>
+                <button type="button" class="btn btn-primary" id="btn-upload-card" onclick="toggleUploadGrid()">파일 업로드</button>
+            </div>
         </div>
-    </header>
-    <div class="container">
-        <br>
-        <h1>데이터</h1>
-        <br>
+
         <%--<div class="card">
             <div class="card-body">
                 <div id="dataGrid"></div>
             </div>
         </div>--%>
-        <div class="card">
-            <div class="card-body">
-                <table class="table" id="">
-                    <colgroup>
-                        <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 5%;">
-                        <col span="1" style="width: 30%;">
-                        <col span="1" style="width: 30%;">
-                        <col span="1" style="width: 15%;">
-                        <col span="1" style="width: 10%;">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th scope="col" ></th>
-                            <th scope="col" ></th>
-                            <th scope="col" class="text-center">이름</th>
-                            <th scope="col" class="text-center">최종수정시간</th>
-                            <th scope="col" class="text-center">데이터수</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-data">
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <table class="table table-hover" >
+                <colgroup>
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 5%;">
+                    <col span="1" style="width: 30%;">
+                    <col span="1" style="width: 30%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 10%;">
+                </colgroup>
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col" class="text-center">이름</th>
+                    <th scope="col" class="text-center">최종수정시간</th>
+                    <th scope="col" class="text-center">데이터수</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody id="table-data">
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer">
-                <button type="button" class="btn btn-primary" id="btn-dat-card" onclick="toggleDatGrid()">새로운 데이터</button>
-                <button type="button" class="btn btn-primary" id="btn-upload-card" onclick="toggleUploadGrid()">파일 업로드</button>
-                <button type="button" class="btn btn-primary" id="btn-dat-delete" onclick="deleteDat()">데이터 삭제</button>
-            </div>
+                </tbody>
+            </table>
+
+            <%--<button type="button" class="btn btn-primary" id="btn-dat-delete" onclick="deleteDat()">데이터 삭제</button>--%>
         </div>
         <br>
-        <div id="div-dat-grid" class="card" style="display: none">
+        <%--<div id="div-dat-grid" class="card" style="display: none">
             <form>
                 <div class="card-body">
                     <label for="input-datNm">데이터명</label><input type="text" class="form-control" id="input-datNm" name="datNm"/>
@@ -88,7 +97,7 @@
                     </button>
                 </div>
             </form>
-        </div>
+        </div>--%>
         <div id="div-upload-grid" class="card" style="display: none">
             <form method="post" action="" enctype="multipart/form-data" id="zipFileUploadForm">
                 <div class="card-body">
@@ -108,12 +117,77 @@
                 </ol>
                 </div>
                 <div class="card-footer">
-                    <button id="btn-zipFileUpload" class="btn btn-primary"  onclick="zipFileUpload(saveFileToDat, fileApiAlert, cbSaveDat)">
+                    <button id="btn-zipFileUpload" class="btn btn-primary"  onclick="zipFileUpload(saveFileToDat, fileApiAlert, _saveDat)">
                         파일 업로드
                     </button>
                 </div>
             </form>
 
+        </div>
+    </div>
+    <div class="container" id="div-table-list" style="display: none">
+        <br>
+        <h3>연결된 데이터</h3>
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <table class="table table-hover" >
+                <colgroup>
+                    <col span="1" width="10%" style="width: 10%;">
+                    <%--<col span="1" style="width: 5%;">--%>
+                    <col span="1" style="width: 30%;">
+                    <col span="1" style="width: 30%;">
+                    <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 10%;">
+                </colgroup>
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col"></th>
+                        <%--<th scope="col"></th>--%>
+                        <th scope="col" class="text-center">이름</th>
+                        <th scope="col" class="text-center">srid</th>
+                        <th scope="col" class="text-center">type</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="table-geo-colum">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="div-dat-grid" tabindex="-1" role="dialog" aria-labelledby="modal-map-label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-map-label">새로운 지도</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="input-map-sno">
+                        <div class="form-group">
+                            <label for="input-datNm">데이터명</label>
+                            <input type="text" class="form-control" id="input-datNm" name="datNm" placeholder="데이터명" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-datDesc">데이터설명</label>
+                            <input type="text" class="form-control" id="input-datDesc" name="datDesc" placeholder="지도 설명"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-datDesc">테이블명</label>
+                            <input type="text" class="form-control" id="input-tblNm" name="datDesc" placeholder="테이블명"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="toggleDatGrid('hide');">닫기</button>
+                    <button id="btn-saveDat" class="btn btn-primary"  onclick="saveDat({'datNm' : 'input-datNm', 'datDesc' : 'input-datDesc', 'tblNm' : 'input-tblNm'})">
+                        데이터 입력
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -130,6 +204,7 @@
 <script type="text/javascript" src="<c:url value='/resources/js/HashMap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/util.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/cmm/cmmApi.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/map/mapApi.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/file/fileApi.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/zip/zip.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/zip/zip-ext.js'/>"></script>

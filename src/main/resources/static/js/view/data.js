@@ -4,7 +4,9 @@ var sridInput = document.getElementById("input-srid");
 var fileList = [];
 var fileType = "";
 var tableDataId = 'table-data';
+var tableGeoColumId = 'table-geo-colum';
 var tcfDatList = null;
+var geoColumnList = null;
 
 var init = function () {
     /*dataGrid = new tui.Grid({
@@ -28,18 +30,19 @@ var init = function () {
         ],
     });*/
     //tui.Grid.applyTheme('clean');
-    gridDataSet(null);
+    getTcfDat(null);
+    getGeoColumn();
 };
 
-var gridDataSet = function (data) {
+var getTcfDat = function (data) {
     if(data == null){
-        cmmApi.getTcfDatList(cbGridDataSet);
+        cmmApi.getTcfDatList(_gridDataSet);
     } else {
-        cmmApi.getTcfDat(data, cbGridDataSet);
+        cmmApi.getTcfDat(data, _gridDataSet);
     }
 };
 
-var cbGridDataSet = function (tcfDatList) {
+var _gridDataSet = function (tcfDatList) {
     this.tcfDatList = tcfDatList;
     //dataGrid.resetData(tcfDatList);
     var tableData = $('#'+tableDataId);
@@ -83,6 +86,7 @@ var cbGridDataSet = function (tcfDatList) {
         });
     }
 };
+
 var settingTcfDat = function(idx, action) {
     var data = this.tcfDatList[idx];
     if(action === 'del'){
@@ -96,18 +100,20 @@ var saveDat = function (inputs) {
     Object.keys(inputs).forEach(function (value) {
         data[value] = $('#'+inputs[value]).val();
     });
-    cmmApi.saveTcfDat(data, cbSaveDat);
+    cmmApi.saveTcfDat(data, _saveDat);
 };
 
-var cbSaveDat = function(res){
-    gridDataSet(null);
+var _saveDat = function(res){
+    getTcfDat(null);
+    divTableListShow();
+    toggleDatGrid('hide');
 };
 
 var gridLayerSet = function (data) {
     if(data == null){
-        cmmApi.getTcfDatList(cbGridDataSet);
+        cmmApi.getTcfDatList(_gridDataSet);
     } else {
-        cmmApi.getTcfDat(data, cbGridDataSet);
+        cmmApi.getTcfDat(data, _gridDataSet);
     }
 };
 var isGISFiles = function() {
@@ -287,12 +293,16 @@ var zipFileUpload = function (saveFileToDat, fileApiAlert, cbSaveDat) {
     fileApi.zipFileToPostGis(saveFileToDat, fileApiAlert, cbSaveDat)
 };
 
-var toggleDatGrid = function() {
+var toggleDatGrid = function(action) {
     $('#div-upload-grid').hide();
-    $('#div-dat-grid').toggle();
+    if(action === 'show'){
+        $('#div-dat-grid').modal('show');
+    } else {
+        $('#div-dat-grid').modal('hide');
+    }
 };
 var toggleUploadGrid = function() {
-    $('#div-dat-grid').hide();
+    $('#div-dat-grid').modal('hide');
     $('#div-upload-grid').toggle();
 };
 
@@ -311,9 +321,71 @@ var _deleteDat = function (datSno) {
     }
     if(confirm("삭제 하시겠습니까?")) {
         var data = {datSno : datSno};
-        cmmApi.removeTcfDat(data, cbDeleteDat);
+        cmmApi.removeTcfDat(data, __deleteDat);
     }
-}
-var cbDeleteDat = function(res){
-    gridDataSet(null);
+};
+var __deleteDat = function(res){
+    getTcfDat(null);
+};
+
+var divDatListShow = function() {
+    $('#div-table-list').hide();
+    $('#div-dat-list').show();
+};
+
+var divTableListShow = function() {
+    $('#div-dat-list').hide();
+    $('#div-table-list').show();
+};
+
+var getGeoColumn = function () {
+    mapApi.getGeometryTable(_getGeoColumn);
+};
+
+var _getGeoColumn = function (geoColumns) {
+    //dataGrid.resetData(tcfDatList);
+    this.geoColumnList = geoColumns;
+    var tableData = $('#'+tableGeoColumId);
+    var html = '';
+    tableData.empty();
+    if(geoColumns.length <= 0){
+        html =
+            ' <tr>' +
+            '      <td colspan="5" class="text-center"><h3>데이터 없음</h3></td>' +
+            '</tr>';
+        tableData.append(html);
+    } else {
+        var idx = 1;
+        geoColumns.forEach(function (item, idx) {
+            html =
+                '<tr>' +
+                '<td>'+ (idx+1) +'</td>' +
+                /*'<td><input type="checkbox" id="cb_geocolumn_'+idx+'" value="'+idx+'"></td>' +*/
+                '<td class="text-center">'+ item.f_table_name +'</td>' +
+                '<td class="text-center">'+ item.srid +'</td>' +
+                '<td class="text-center">'+ item.type +'</td>' +
+                '<td class="text-center">' +
+                '<div class="dropdown">' +
+                '<button class="btn btn-primary btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                '설정' +
+                '</button>' +
+                '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+                '<a class="dropdown-item" href="#" onclick="settingGeoColumn('+idx+',\'add\')">데이터 추가</a>' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '</tr>';
+            tableData.append(html);
+        });
+    }
+};
+var settingGeoColumn = function (idx, action) {
+    var data = this.geoColumnList[idx];
+    if(action === 'add'){
+        addGeoColumn(data)
+    }
+};
+var addGeoColumn = function(geoColumn){
+    $('#input-tblNm').val(geoColumn.f_table_name);
+    toggleDatGrid('show');
 };

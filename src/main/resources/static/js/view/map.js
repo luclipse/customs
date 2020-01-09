@@ -105,10 +105,13 @@ var cbInitLayer = function (layers) {
     layers.forEach(function (layer) {
         if(Number(layer.datSno) === -1) {
             olMap.addBaseLayer(baseMap[layer.layNm.split('.')[0]][layer.layNm.split('.')[1]], [14137575.330745745, 4300621.372044271], 13);
+            grid.resetData(olMap.getLayerListJson('layer,baseLayer'));
         }
     });
     layers.forEach(function (layer) {
-        getLayerToStyle(layer);
+        if(Number(layer.datSno) !== -1) {
+            getLayerToStyle(layer);
+        }
     });
     initAddr();
 };

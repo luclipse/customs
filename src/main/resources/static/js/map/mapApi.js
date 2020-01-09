@@ -71,6 +71,20 @@ var mapApi = {
         }
         return vector;
     },
+    getGeometryTable : function (callback) {
+        $.ajax({
+            url: serverMapHost + "/geoCalc/getGeometryTable",
+            data : {
+            },
+            success: function (res) {
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    callback(res.data);
+                } else {
+
+                }
+            }
+        });
+    },
 };
 
 
