@@ -2,7 +2,9 @@ package lxpf.cvs.map.web;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
@@ -31,11 +33,20 @@ public class MainController {
         return "main";         // 실제 호출될 /WEB-INF/jsp/main.jsp
     }
 
-    @RequestMapping(value="/map/")
-    public String map(Map<String, Object> model)  {
+    @RequestMapping(value="/maplist/")
+    public String maplist(Map<String, Object> model)  {
         model.put("serverMapHost", serverMapHost);
         model.put("serverMapCmmHost", serverMapCmmHost);
         model.put("serverFileHost", serverFileHost);
+        return "view/maplist";         // 실제 호출될 /WEB-INF/jsp/main.jsp
+    }
+
+    @RequestMapping(value="/map/")
+    public String map(@RequestParam String mapSno, Model model)  {
+        model.addAttribute("serverMapHost", serverMapHost);
+        model.addAttribute("serverMapCmmHost", serverMapCmmHost);
+        model.addAttribute("serverFileHost", serverFileHost);
+        model.addAttribute("mapSno", mapSno);
         return "view/map";         // 실제 호출될 /WEB-INF/jsp/main.jsp
     }
 

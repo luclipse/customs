@@ -3,25 +3,11 @@ var locSigungu;
 var locAdm;
 var grid;
 var dataGrid;
-var mapSno = 1; //임시 맵 sno
 var currentLayer = null;
 
 var init = function () {
-    olMap.addBaseLayer(vworldSrc.vector, [14137575.330745745, 4300621.372044271], 13);
+    //olMap.addBaseLayer(vworldSrc.vector, [14137575.330745745, 4300621.372044271], 13);
     initLayer();
-
-    //주소를 가져온다.
-    olMap.olMap.on('moveend', function (e) {
-        //현재 중간점의 좌표를 가져옴
-        var coord = olMap.olMap.getView().getCenter();
-        // 시도 주소
-        mapApi.getAddrByPoint('z_sop_bnd_sido_pg', 'sido_nm', 'sido_cd', coord, 'input-sido', locSido, 'EPSG:3857', 'EPSG:5181', setAddr);
-        // 시군구 주소
-        mapApi.getAddrByPoint('z_sop_bnd_sigungu_pg', 'sigungu_nm', 'sigungu_cd', coord, 'input-sigungu', locSigungu, 'EPSG:3857', 'EPSG:5181', setAddr);
-        // 읍면동 주소
-        mapApi.getAddrByPoint('z_sop_bnd_adm_dong_pg', 'adm_dr_nm', 'adm_dr_cd', coord, 'input-adm', locAdm, 'EPSG:3857', 'EPSG:5181', setAddr);
-    });
-
     //레이어 그리드 설정
     grid = new tui.Grid({
         el: document.getElementById('grid'), // Container element
@@ -57,10 +43,22 @@ var init = function () {
             }
         ]
     });
-    var selectedRowKey = null;
     tui.Grid.applyTheme('clean');
     initData(null);
     olStyle.initStyle('a-line-color', 'a-plane-color', 'input-line-size', 'div-radius-size', 'input-radius-size');
+};
+var initAddr = function () {
+//주소를 가져온다.
+    olMap.olMap.on('moveend', function (e) {
+        //현재 중간점의 좌표를 가져옴
+        var coord = olMap.olMap.getView().getCenter();
+        // 시도 주소
+        mapApi.getAddrByPoint('z_sop_bnd_sido_pg', 'sido_nm', 'sido_cd', coord, 'input-sido', locSido, 'EPSG:3857', 'EPSG:5181', setAddr);
+        // 시군구 주소
+        mapApi.getAddrByPoint('z_sop_bnd_sigungu_pg', 'sigungu_nm', 'sigungu_cd', coord, 'input-sigungu', locSigungu, 'EPSG:3857', 'EPSG:5181', setAddr);
+        // 읍면동 주소
+        mapApi.getAddrByPoint('z_sop_bnd_adm_dong_pg', 'adm_dr_nm', 'adm_dr_cd', coord, 'input-adm', locAdm, 'EPSG:3857', 'EPSG:5181', setAddr);
+    });
 };
 
 // 드로우한 레이어를 WKT로 가져옴.
@@ -105,8 +103,17 @@ var initLayer = function () {
 //레이어 그리드 초기화 콜백
 var cbInitLayer = function (layers) {
     layers.forEach(function (layer) {
-        getLayerToStyle(layer);
+        if(Number(layer.datSno) === -1) {
+            olMap.addBaseLayer(baseMap[layer.layNm.split('.')[0]][layer.layNm.split('.')[1]], [14137575.330745745, 4300621.372044271], 13);
+            grid.resetData(olMap.getLayerListJson('layer,baseLayer'));
+        }
     });
+    layers.forEach(function (layer) {
+        if(Number(layer.datSno) !== -1) {
+            getLayerToStyle(layer);
+        }
+    });
+    initAddr();
 };
 
 // 새로운 레이어 추가
@@ -150,7 +157,9 @@ var cbAddNewLayer =function(style){
 
 // 레이어 값을 이용하여 데이터 정보를 가져옴
 var getLayerToData = function (layer, style) {
-    cmmApi.getTcfDatBySno(layer, style, addLayer);
+    if(layer.datSno != -1) {
+        cmmApi.getTcfDatBySno(layer, style, addLayer);
+    }
 };
 
 // 레이어 값을 이용하여 스타일 정보를 가져옴
@@ -160,7 +169,7 @@ var getLayerToStyle = function (layer) {
 
 //레이어 추가함.
 var addLayer = function (layer, style, data) {
-    olMap.addVectorLayer(layer.layNm, serverMapHost + '/geoCalc/getMap', data.tblNm, data.srid, 'EPSG:3857', 0, 200, style, null, data.geomType);
+    olMap.addVectorLayer(serverMapHost + '/geoCalc/getMap', 'EPSG:3857', 0, 200, style, null, layer, data);
     grid.resetData(olMap.getLayerListJson('layer,baseLayer'));
     $('#div-data-grid').hide();
 };

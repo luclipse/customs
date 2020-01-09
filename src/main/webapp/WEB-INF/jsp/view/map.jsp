@@ -173,10 +173,10 @@
         <div class="navbar-nav-scroll">
             <ul class="navbar-nav bd-navbar-nav flex-row">
                 <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="./../map/">MAP</a>
+                    <a class="nav-link active" href="<c:url value='/maplist/'/>">MAP</a>
                 </li>
                 <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="./../data/">DATA</a>
+                    <a class="nav-link active" href="<c:url value='/data/'/>">DATA</a>
                 </li>
             </ul>
         </div>
@@ -190,6 +190,7 @@
                 레이어 추가
             </button>
             <div id="grid" style="width:300px;"></div>
+            <div id="div-layer" style="width:300px;"></div>
             <ul class="list-unstyled CTAs">
                 <li>
                     <a href="#" onclick="toggleDownload();" class="download">다운로드</a>
@@ -333,6 +334,7 @@
     var serverMapHost = '${serverMapHost}';
     var serverMapCmmHost = '${serverMapCmmHost}';
     var serverFileHost = '${serverFileHost}';
+    var mapSno = ${mapSno};
     var mapSrid = '3857';
     var addrSrid = '5181';
 </script>
@@ -343,7 +345,6 @@
 <script type="text/javascript" src="<c:url value='/resources/js/lib/tui.grid/tui-grid.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/vanilla-picker/vanilla-picker.min.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/xmlToJson/xmlToJson.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/cmm/cmmApi.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/HashMap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/util.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/map/mapUtil.js'/>"></script>
