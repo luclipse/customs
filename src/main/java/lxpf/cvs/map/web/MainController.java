@@ -46,4 +46,12 @@ public class MainController {
         model.put("serverFileHost", serverFileHost);
         return "view/data";         // 실제 호출될 /WEB-INF/jsp/data.jsp
     }
+
+    @RequestMapping(value="/sample/")
+    public String sample(Map<String, Object> model) {
+        model.put("serverMapHost", serverMapHost);
+        model.put("serverMapCmmHost", serverMapCmmHost);
+        model.put("serverFileHost", serverFileHost);
+        return "view/sample";         // 실제 호출될 /WEB-INF/jsp/data.jsp
+    }
 }
