@@ -42,12 +42,12 @@ var mapApi = {
             }
         });
     },
-    getVectorLayerExtend : function  (name, url, layerName, fromPrj, toPrj, minResolution, maxResolution, style, group, geomType) {
+    getVectorLayerExtend : function  (url, toPrj, minResolution, maxResolution, style, group, layer, data) {
         var source = new ol.source.Vector({
             format: new ol.format.GeoJSON(),
             url: function(extent) {
-                var ext = transformExtent(extent, toPrj, fromPrj);
-                return url + '?layerName='+layerName+'&bbox='+ext.join(',')+'&fromProj='+fromPrj+'&toProj='+toPrj;
+                var ext = transformExtent(extent, toPrj, data.srid);
+                return url + '?layerName='+data.tblNm+'&bbox='+ext.join(',')+'&fromProj='+data.srid+'&toProj='+toPrj;
             },
             strategy: ol.loadingstrategy.bbox,
             crossOrigin: "Anonymous"
@@ -58,16 +58,32 @@ var mapApi = {
             minResolution : minResolution,
             maxResolution : maxResolution
         });
-        vector.set("name", name);
-        vector.set("tblName", layerName);
+        vector.set("tcfDat", data);
+        vector.set("tcfLay", layer);
+        vector.set("name", layer.layNm);
+        vector.set("tblName", data.tblNm);
         vector.set("type", "layer");
-        vector.set("srid", fromPrj);
-        vector.set("geomType", geomType);
+        vector.set("srid", data.srid);
+        vector.set("geomType", data.geomType);
         //vector.setMaxZoom(maxZoom);
         if(group != null) {
             //todo 레이어 그룹
         }
         return vector;
+    },
+    getGeometryTable : function (callback) {
+        $.ajax({
+            url: serverMapHost + "/geoCalc/getGeometryTable",
+            data : {
+            },
+            success: function (res) {
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    callback(res.data);
+                } else {
+
+                }
+            }
+        });
     },
 };
 

@@ -3,25 +3,11 @@ var locSigungu;
 var locAdm;
 var grid;
 var dataGrid;
-var mapSno = 1; //임시 맵 sno
 var currentLayer = null;
 
 var init = function () {
-    olMap.addBaseLayer(vworldSrc.vector, [14137575.330745745, 4300621.372044271], 13);
+    //olMap.addBaseLayer(vworldSrc.vector, [14137575.330745745, 4300621.372044271], 13);
     initLayer();
-
-    //주소를 가져온다.
-    olMap.olMap.on('moveend', function (e) {
-        //현재 중간점의 좌표를 가져옴
-        var coord = olMap.olMap.getView().getCenter();
-        // 시도 주소
-        mapApi.getAddrByPoint('z_sop_bnd_sido_pg', 'sido_nm', 'sido_cd', coord, 'input-sido', locSido, 'EPSG:3857', 'EPSG:5181', setAddr);
-        // 시군구 주소
-        mapApi.getAddrByPoint('z_sop_bnd_sigungu_pg', 'sigungu_nm', 'sigungu_cd', coord, 'input-sigungu', locSigungu, 'EPSG:3857', 'EPSG:5181', setAddr);
-        // 읍면동 주소
-        mapApi.getAddrByPoint('z_sop_bnd_adm_dong_pg', 'adm_dr_nm', 'adm_dr_cd', coord, 'input-adm', locAdm, 'EPSG:3857', 'EPSG:5181', setAddr);
-    });
-
     //레이어 그리드 설정
     grid = new tui.Grid({
         el: document.getElementById('grid'), // Container element
@@ -57,13 +43,22 @@ var init = function () {
             }
         ]
     });
-    var selectedRowKey = null;
     tui.Grid.applyTheme('clean');
     initData(null);
-
-
-    olStyle.initPolygonLineColor('a-line-color');
-    olStyle.initPolygonFillColor('a-plane-color');
+    olStyle.initStyle('a-line-color', 'a-plane-color', 'input-line-size', 'div-radius-size', 'input-radius-size');
+};
+var initAddr = function () {
+//주소를 가져온다.
+    olMap.olMap.on('moveend', function (e) {
+        //현재 중간점의 좌표를 가져옴
+        var coord = olMap.olMap.getView().getCenter();
+        // 시도 주소
+        mapApi.getAddrByPoint('z_sop_bnd_sido_pg', 'sido_nm', 'sido_cd', coord, 'input-sido', locSido, 'EPSG:3857', 'EPSG:5181', setAddr);
+        // 시군구 주소
+        mapApi.getAddrByPoint('z_sop_bnd_sigungu_pg', 'sigungu_nm', 'sigungu_cd', coord, 'input-sigungu', locSigungu, 'EPSG:3857', 'EPSG:5181', setAddr);
+        // 읍면동 주소
+        mapApi.getAddrByPoint('z_sop_bnd_adm_dong_pg', 'adm_dr_nm', 'adm_dr_cd', coord, 'input-adm', locAdm, 'EPSG:3857', 'EPSG:5181', setAddr);
+    });
 };
 
 // 드로우한 레이어를 WKT로 가져옴.
@@ -97,7 +92,7 @@ var initData = function (data) {
 //데이터 그리드 초기화 콜백
 var cbInitData = function (tcfDatList) {
     dataGrid.resetData(tcfDatList);
-    $('#div-data-grid').hide();
+    //$('#div-data-grid').hide();
 };
 
 //레이어 그리드 초기화
@@ -108,8 +103,17 @@ var initLayer = function () {
 //레이어 그리드 초기화 콜백
 var cbInitLayer = function (layers) {
     layers.forEach(function (layer) {
-        getLayerToStyle(layer);
+        if(Number(layer.datSno) === -1) {
+            olMap.addBaseLayer(baseMap[layer.layNm.split('.')[0]][layer.layNm.split('.')[1]], [14137575.330745745, 4300621.372044271], 13);
+            grid.resetData(olMap.getLayerListJson('layer,baseLayer'));
+        }
     });
+    layers.forEach(function (layer) {
+        if(Number(layer.datSno) !== -1) {
+            getLayerToStyle(layer);
+        }
+    });
+    initAddr();
 };
 
 // 새로운 레이어 추가
@@ -129,11 +133,12 @@ var addNewLayer = function () {
 // 새로운 레이어 스타일 추가 콜백
 var cbAddNewLayerStyle = function (res, dat) {
     var style = '';
-    if(dat.geomType === 'MultiPolygon' || dat.geomType === 'Polygon') {
+    var type = dat.geomType.toUpperCase();
+    if(type === 'MULTIPOLYGON' || type=== 'POLYGON') {
         style = olStyle.getPolygonStyle(olStyle.getStroke(random_rgb(), 1) , olStyle.getFillStyle(random_rgba()));
-    } else if(dat.geomType === 'MultiPoint' || dat.geomType === 'Point'){
+    } else if(type=== 'MULTIPOINT' || type === 'POINT'){
         style = olStyle.getSvgCircleStyle(random_rgb(), 1,random_rgb(), 5);
-    } else if(dat.geomType === 'MultiLineString' || dat.geomType === 'LineString'){
+    } else if(type=== 'MULTILINESTRING' || type === 'LINESTRING'){
         style = olStyle.getLineStyle(olStyle.getStroke(random_rgb(), 1));
     }
     var data = {
@@ -152,7 +157,9 @@ var cbAddNewLayer =function(style){
 
 // 레이어 값을 이용하여 데이터 정보를 가져옴
 var getLayerToData = function (layer, style) {
-    cmmApi.getTcfDatBySno(layer, style, addLayer);
+    if(layer.datSno != -1) {
+        cmmApi.getTcfDatBySno(layer, style, addLayer);
+    }
 };
 
 // 레이어 값을 이용하여 스타일 정보를 가져옴
@@ -162,7 +169,7 @@ var getLayerToStyle = function (layer) {
 
 //레이어 추가함.
 var addLayer = function (layer, style, data) {
-    olMap.addVectorLayer(layer.layNm, serverMapHost + '/geoCalc/getMap', data.tblNm, data.srid, 'EPSG:3857', 0, 200, style, null, data.geomType);
+    olMap.addVectorLayer(serverMapHost + '/geoCalc/getMap', 'EPSG:3857', 0, 200, style, null, layer, data);
     grid.resetData(olMap.getLayerListJson('layer,baseLayer'));
     $('#div-data-grid').hide();
 };
@@ -268,7 +275,8 @@ var setStyleText = function () {
 
 // 스타일 창 토글
 var toggleStyle = function () {
-    if($('#div-style').is(':visible')){
+    var div = $('#div-style');
+    if(div.is(':visible')){
         currentLayer = null;
     } else {
         var row = grid.getRow(grid.getFocusedCell().rowKey);
@@ -281,23 +289,17 @@ var toggleStyle = function () {
             return;
         }
         currentLayer = olMap.getLayersByName(row.name);
-        var geomType = currentLayer.get("geomType");
-        if(geomType === 'MultiPolygon' || geomType === 'Polygon') {
-            olStyle.setColorPickerLineColor(currentLayer);
-            olStyle.setColorPickerFillColor(currentLayer);
-            olStyle.initStrokeWidth('input-line-size', currentLayer);
-        } else if(geomType === 'MultiPoint' || geomType === 'Point'){
-
-        } else if(geomType === 'MultiLineString' || geomType === 'LineString'){
-
-        }
+        olStyle.setColorPickerLineColor(currentLayer);
+        olStyle.setColorPickerFillColor(currentLayer);
+        olStyle.setStrokeWidth(currentLayer);
+        olStyle.setRadiusWidth(currentLayer);
     }
     $('#div-data-grid').hide();
     $('#div-download').hide();
     $('#div-measure').hide();
     $('#div-addr').hide();
     $('#div-style-text').hide();
-    $('#div-style').toggle();
+    div.toggle();
 };
 
 

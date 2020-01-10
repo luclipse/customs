@@ -173,10 +173,10 @@
         <div class="navbar-nav-scroll">
             <ul class="navbar-nav bd-navbar-nav flex-row">
                 <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="./../map/">MAP</a>
+                    <a class="nav-link active" href="<c:url value='/maplist/'/>">MAP</a>
                 </li>
                 <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
-                    <a class="nav-link active" href="./../data/">DATA</a>
+                    <a class="nav-link active" href="<c:url value='/data/'/>">DATA</a>
                 </li>
             </ul>
         </div>
@@ -190,6 +190,7 @@
                 레이어 추가
             </button>
             <div id="grid" style="width:300px;"></div>
+            <div id="div-layer" style="width:300px;"></div>
             <ul class="list-unstyled CTAs">
                 <li>
                     <a href="#" onclick="toggleDownload();" class="download">다운로드</a>
@@ -280,7 +281,12 @@
         <div class="card-body">
             <form>
                 <div class="form-group">
-                    <label for="input-line-size">선 크기</label><input type="text" class="form-control" id="input-line-size">
+                    <div>
+                        <label for="input-line-size">선 크기</label><input type="text" class="form-control" id="input-line-size">
+                    </div>
+                    <div id="div-radius-size" >
+                        <label for="input-radius-size">점 크기</label><input type="text" class="form-control" id="input-radius-size">
+                    </div>
                     <section>
                         <label for="input-line-size">선 색상</label>
                         <button class="btn" id="a-line-color" style="height: 30px;width: 50px"></button>
@@ -291,7 +297,7 @@
             </form>
         </div>
         <div class="card-footer text-center">
-            <button type="button" class="btn btn-primary" onclick="olStyle.setStyleSetting(currentLayer)">적용</button>
+            <button type="button" class="btn btn-primary" onclick="olStyle.setStyle(currentLayer)">적용</button>
             <button type="button" class="btn btn-secondary" onclick="toggleStyle();">창 닫기</button>
         </div>
     </div>
@@ -328,6 +334,7 @@
     var serverMapHost = '${serverMapHost}';
     var serverMapCmmHost = '${serverMapCmmHost}';
     var serverFileHost = '${serverFileHost}';
+    var mapSno = ${mapSno};
     var mapSrid = '3857';
     var addrSrid = '5181';
 </script>
@@ -337,7 +344,7 @@
 <script type="text/javascript" src="<c:url value='/resources/js/lib/proj4/proj4.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/tui.grid/tui-grid.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/vanilla-picker/vanilla-picker.min.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/cmm/cmmApi.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/xmlToJson/xmlToJson.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/HashMap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/util.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/map/mapUtil.js'/>"></script>

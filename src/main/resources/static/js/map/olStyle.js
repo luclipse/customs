@@ -10,34 +10,97 @@ var olStyle = {
     fillColor : null,
 
     lineWidth : 0,
+    radiusWidth : 0,
 
-    initPolygonLineColor : function(divLineColorId){
+    divLineColorId : null,
+    divFillColorId : null,
+    inputStrokeWidthId : null,
+    divRadiusWidthId : null,
+    inputRadiusWidthId : null,
+
+    initStyle : function(divLineColorId, divFillColorId, inputStrokeWidthId, divRadiusWidthId, inputRadiusWidthId) {
+        this.divLineColorId = divLineColorId;
+        this.divFillColorId = divFillColorId;
+        this.inputStrokeWidthId = inputStrokeWidthId;
+        this.divRadiusWidthId = divRadiusWidthId;
+        this.inputRadiusWidthId = inputRadiusWidthId;
+        this.initFillColor();
+        this.initLineColor();
+    },
+
+    initLineColor : function(){
         this.lineColor = null;
-        this.lineColor = document.querySelector('#'+divLineColorId);
+        this.lineColor = document.querySelector('#'+this.divLineColorId);
         this.popupLineColor = null;
         this.popupLineColor = new Picker(this.lineColor);
-
     },
+
     setColorPickerLineColor : function(layer) {
-        this.initColorPicker(this.lineColor,this.popupLineColor, olStyle.getPolygonStrokeColor(layer), layer.getStyle().getStroke(), layer);
+        var geomType = layer.get("geomType").toUpperCase();
+        if(geomType === 'MULTIPOLYGON' || geomType === 'POLYGON') {
+            this.initColorPicker(this.lineColor,this.popupLineColor, this.getPolygonStrokeColor(layer));
+        } else if(geomType === 'MULTIPOINT' || geomType === 'POINT'){
+            var svg = xmlToJson.parse(currentLayer.getStyle().getImage().getImage().src.replace("data:image/svg+xml;utf8,", ""));
+            this.initColorPicker(this.lineColor,this.popupLineColor, svg.svg.circle["stroke"]);
+        } else if(geomType === 'MULTILINESTRING' || geomType === 'LINESTRING'){
+            // Todo lineString Style
+        }
     },
 
-    initPolygonFillColor : function(divFillColorId){
-        this.fillColor = document.querySelector('#'+divFillColorId);
+    initFillColor : function(){
+        this.fillColor = null;
+        this.fillColor = document.querySelector('#'+this.divFillColorId);
+        this.popupFillColor = null;
         this.popupFillColor = new Picker(this.fillColor);
     },
+
     setColorPickerFillColor : function(layer){
-        this.initColorPicker(this.fillColor,this.popupFillColor, olStyle.getPolygonFillColor(layer), layer.getStyle().getFill(), layer);
+        var geomType = layer.get("geomType").toUpperCase();
+        if(geomType === 'MULTIPOLYGON' || geomType === 'POLYGON') {
+            this.initColorPicker(this.fillColor,this.popupFillColor, this.getPolygonFillColor(layer));
+        } else if(geomType === 'MULTIPOINT' || geomType === 'POINT'){
+            var svg = xmlToJson.parse(currentLayer.getStyle().getImage().getImage().src.replace("data:image/svg+xml;utf8,", ""));
+            this.initColorPicker(this.fillColor,this.popupFillColor, svg.svg.circle["fill"]);
+        } else if(geomType === 'MULTILINESTRING' || geomType === 'LINESTRING'){
+            // Todo lineString Style
+        }
     },
-    initStrokeWidth : function(inputStrokeWidth, layer){
-        $('#'+ inputStrokeWidth).val(olStyle.getPolygonStrokeWidth(currentLayer));
-        $('#'+ inputStrokeWidth).change(function () {
+    setStrokeWidth : function(layer){
+        var geomType = layer.get("geomType").toUpperCase();
+        var selStrokeWidth = $('#'+ this.inputStrokeWidthId);
+        if(geomType === 'MULTIPOLYGON' || geomType === 'POLYGON') {
+            selStrokeWidth.val(this.getPolygonStrokeWidth(currentLayer));
+        } else if(geomType === 'MULTIPOINT' || geomType === 'POINT'){
+            var svg = xmlToJson.parse(currentLayer.getStyle().getImage().getImage().src.replace("data:image/svg+xml;utf8,", ""));
+            selStrokeWidth.val(svg.svg.circle["stroke-width"]);
+        } else if(geomType === 'MULTILINESTRING' || geomType === 'LINESTRING'){
+            // Todo lineString Style
+        }
+        this.lineWidth = selStrokeWidth.val();
+        selStrokeWidth.change(function () {
             olStyle.lineWidth = this.value;
-            //layer.getStyle().getStroke().setWidth(this.value);
-        })
+        });
     },
 
-    initColorPicker : function(mColor, mPopupColor, baseColor, style, layer){
+    setRadiusWidth : function(layer){
+        var geomType = layer.get("geomType").toUpperCase();
+        var selRadiusWidth = $('#'+ this.inputRadiusWidthId);
+        if(geomType === 'MULTIPOLYGON' || geomType === 'POLYGON') {
+            $('#'+ this.divRadiusWidthId).hide();
+        } else if(geomType === 'MULTIPOINT' || geomType === 'POINT'){
+            $('#'+ this.divRadiusWidthId).show();
+            var svg = xmlToJson.parse(currentLayer.getStyle().getImage().getImage().src.replace("data:image/svg+xml;utf8,", ""));
+            selRadiusWidth.val(svg.svg.circle["r"]);
+        } else if(geomType === 'MULTILINESTRING' || geomType === 'LINESTRING'){
+            // Todo lineString Style
+        }
+        this.radiusWidth = selRadiusWidth.val();
+        selRadiusWidth.change(function () {
+            olStyle.radiusWidth = this.value;
+        });
+    },
+
+    initColorPicker : function(mColor, mPopupColor, baseColor){
         mPopupColor.onDone = null;
         mPopupColor.onDone = function(e) {
             mColor.style.background = e.rgbaString;
@@ -48,20 +111,28 @@ var olStyle = {
         mPopupColor.setColor(baseColor);
         mColor.style.background = mPopupColor.color.rgbaString;
     },
-    setStyleSetting : function(layer){
+    setStyle : function(layer){
         if(layer == null)
             return;
 
-        var fill = olStyle.popupFillColor.color.rgbaString;
-        var line = olStyle.popupLineColor.color.rgbaString;
-        olStyle.setPolygonFillColor(layer, fill);
-        olStyle.setPolygonStrokeColor(layer, line);
-        olStyle.setPolygonStrokeWidth(layer, olStyle.lineWidth);
+        var fill = this.popupFillColor.color.rgbaString;
+        var line = this.popupLineColor.color.rgbaString;
+
+        var geomType = layer.get("geomType").toUpperCase();
+        if(geomType === 'MULTIPOLYGON' || geomType === 'POLYGON') {
+            this.setPolygonFillColor(layer, fill);
+            this.setPolygonStrokeColor(layer, line);
+            this.setPolygonStrokeWidth(layer, this.lineWidth);
+        } else if(geomType === 'MULTIPOINT' || geomType === 'POINT'){
+            this.getPointStyle(layer, line, this.lineWidth, fill, this.radiusWidth);
+        } else if(geomType === 'MULTILINESTRING' || geomType === 'LINESTRING'){
+
+        }
+
         var stClass = layer.getStyle();
-        layer.setStyle(stClass);
 
         var style = layer.get("style");
-        var styleStr = olStyle.getStringStyle(stClass);
+        var styleStr = this.getStringStyle(stClass);
         style.styleStr = styleStr;
 
         layer.set("style", style);
@@ -86,8 +157,9 @@ var olStyle = {
             width : width
         });
     },
-
     getSvgCircleStyle : function (strokeColor, strokeWidth, fillColor, radius) {
+        strokeWidth = Number(strokeWidth);
+        radius = Number(radius);
         var size = (radius * 2) + (strokeWidth * 2);
         var cxy = radius + strokeWidth;
         return new ol.style.Style({
@@ -149,13 +221,16 @@ var olStyle = {
         });
         var res = null;
         if(mStroke !== null && mFill !== null) {
-            res = olStyle.getPolygonStyle(mStroke, mFill);
+            res = this.getPolygonStyle(mStroke, mFill);
         } else if(mStroke !== null ) {
-            res = olStyle.getLineStyle(mStroke);
+            res = this.getLineStyle(mStroke);
         } else if(mImageAnchorX !== null && mImageAnchorY !== null && mImageSrc !== null) {
-            res = olStyle.getImageStyle(mImageAnchorX, mImageAnchorY, mImageSrc);
+            res = this.getImageStyle(mImageAnchorX, mImageAnchorY, mImageSrc);
         }
         return res;
+    },
+    getPointStyle : function(layer, strokeColor, strokeWidth, fillColor, radius) {
+        return layer.setStyle(this.getSvgCircleStyle(strokeColor, strokeWidth, fillColor, radius));
     },
     getPolygonFillColor: function(layer) {
         return layer.getStyle().getFill().getColor();
