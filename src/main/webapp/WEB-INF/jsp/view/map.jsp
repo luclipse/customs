@@ -216,7 +216,7 @@
 
     <div id="div-data-grid" class="card dataBox">
         <div class="card-header text-center">데이터 목록</div>
-        <div class="card-body">
+        <div class="card-body" style="overflow-y: auto;">
             <div id="dataGrid"></div>
         </div>
         <div class="card-footer text-center">
