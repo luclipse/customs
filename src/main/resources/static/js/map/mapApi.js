@@ -85,6 +85,23 @@ var mapApi = {
             }
         });
     },
+    getGeoServerLayers : function (geoserverData, type, callback) {
+        $.ajax({
+            url: serverMapHost + "/geoserver/getLayers",
+            method : 'GET',
+            data : {
+                geoserverHost : geoserverData.srcUrl,
+                type : type
+            },
+            success: function (res) {
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    callback(res.data, geoserverData);
+                } else {
+
+                }
+            }
+        });
+    }
 };
 
 

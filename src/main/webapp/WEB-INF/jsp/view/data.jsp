@@ -19,7 +19,6 @@
     <link rel="stylesheet" href="<c:url value='/resources/js/lib/bootstrap-4.4.1/css/bootstrap.css'/>" type="text/css">
     <link rel="stylesheet" href="<c:url value='/resources/js/lib/bootstrap-4.4.1/css/sidebar.css'/>" type="text/css">
 </head>
-
 <body onload="init()" class="bg-light">
     <div class="navbar navbar-dark bg-dark" style="margin-bottom: 0;justify-content: flex-start;">
         <a class="navbar-brand" href="#">LXPF</a>
@@ -126,8 +125,22 @@
         </div>
     </div>
     <div class="container" id="div-table-list" style="display: none">
-        <br>
-        <h3>연결된 데이터</h3>
+        <div style="padding-top: 20px"></div>
+        <form>
+            <div class="form-group row">
+                <div class="col-10">
+                    <h3>연결된 데이터</h3>
+                </div>
+                <%--<label class="col-1" for="exampleFormControlSelect1">카테고리</label>--%>
+                <div class="col-2">
+                    <select class="form-control" id="sel-datasrc-list">
+                        <%--<option value="DB-BASE" selected>데이터베이스</option>
+                        <option value="GEO-WFS-1">지오서버 WMS</option>
+                        <option value="GEO-WMS-1">지오서버 WFS</option>--%>
+                    </select>
+                </div>
+            </div>
+        </form>
         <div class="my-3 p-3 bg-white rounded box-shadow">
             <table class="table table-hover" >
                 <colgroup>
@@ -144,7 +157,7 @@
                         <%--<th scope="col"></th>--%>
                         <th scope="col" class="text-center">이름</th>
                         <th scope="col" class="text-center">srid</th>
-                        <th scope="col" class="text-center">type</th>
+                        <th scope="col" class="text-center">종류</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>

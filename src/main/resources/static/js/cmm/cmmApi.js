@@ -193,6 +193,16 @@ var cmmApi = {
             }
         });
     },
+
+    getTcfDatSrc : function (callback) {
+        $.ajax({
+            url: serverMapCmmHost + "/tcfDatSrc/getTcfDatSrc",
+            data : {},
+            success: function (res) {
+                callback(res);
+            }
+        });
+    },
 };
 
 
