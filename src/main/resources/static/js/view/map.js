@@ -140,6 +140,8 @@ var cbAddNewLayerStyle = function (res, dat) {
         style = olStyle.getSvgCircleStyle(random_rgb(), 1,random_rgb(), 5);
     } else if(type=== 'MULTILINESTRING' || type === 'LINESTRING'){
         style = olStyle.getLineStyle(olStyle.getStroke(random_rgb(), 1));
+    } else {
+
     }
     var data = {
         laySno : res.laySno,

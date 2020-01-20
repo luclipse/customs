@@ -41,6 +41,10 @@ var _gridDataSet = function (tcfDatList) {
     } else {
         var idx = 1;
         tcfDatList.forEach(function (item, idx) {
+            var cnt = item.datCnt;
+            if(cnt == -1) {
+                cnt = '';
+            }
             var d = new Date(item.mdfDt),
                 dformat = [d.getFullYear(),(d.getMonth()+1).padLeft(),
                         d.getDate().padLeft()].join('-') +' ' +
@@ -54,7 +58,7 @@ var _gridDataSet = function (tcfDatList) {
                     '<td><input type="checkbox" id="cb_tcfdat_'+idx+'" value="'+idx+'"></td>' +
                     '<td class="text-center">'+ item.datNm +'</td>' +
                     '<td class="text-center">'+ dformat +'</td>' +
-                    '<td class="text-center">'+ item.datCnt +'</td>' +
+                    '<td class="text-center">'+ cnt +'</td>' +
                     '<td class="text-center">' +
                     '<div class="dropdown">' +
                         '<button class="btn btn-primary btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
@@ -474,13 +478,20 @@ var settingGeoServerWFS = function (idx,srcSno,action) {
 };
 
 var addGeoServerLayerWMS = function(layer, srcSno){
-    var tblNm = 'WMS|' + srcSno + '|' + layer.Name;
+    var tblNm = 'GEO;WMS;' + srcSno + ';' + layer.Name ;
+    var bbox = layer.BoundingBox.minx + ' ' + layer.BoundingBox.miny + ',' + layer.BoundingBox.maxx + ' ' + layer.BoundingBox.maxy;
     $('#input-tblNm').val(tblNm);
+    $('#input-datSrid').val(layer.SRS);
+    $('#input-datbbox').val(bbox);
     toggleDatGrid('show');
 };
 
 var addGeoServerLayerWFS = function(layer, srcSno){
-    var tblNm = 'WFS|' + srcSno + '|' + layer.Name;
+    var SRS = layer.DefaultSRS.split(":")[4] + ":" + layer.DefaultSRS.split(":")[5];
+    var tblNm = 'GEO;WFS;' + srcSno + ';' + layer.Name ;
+    var bbox = layer['ows:WGS84BoundingBox']["ows:LowerCorner"] + ',' + layer['ows:WGS84BoundingBox']["ows:UpperCorner"];
     $('#input-tblNm').val(tblNm);
+    $('#input-datSrid').val(SRS);
+    $('#input-datbbox').val(bbox);
     toggleDatGrid('show');
 };

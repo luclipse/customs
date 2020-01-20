@@ -190,13 +190,21 @@
                         </div>
                         <div class="form-group">
                             <label for="input-datDesc">테이블명</label>
-                            <input type="text" class="form-control" id="input-tblNm" name="datDesc" placeholder="테이블명"/>
+                            <input type="text" class="form-control" id="input-tblNm" name="tblNm" placeholder="테이블명"/>
+                        </div>
+                        <div class="form-group" style="display:none;">
+                            <label for="input-datDesc">srid</label>
+                            <input type="hidden" class="form-control" id="input-datSrid" name="srid" placeholder="srid"/>
+                        </div>
+                        <div class="form-group" style="display:none;">
+                            <label for="input-datDesc">srid</label>
+                            <input type="hidden" class="form-control" id="input-datbbox" name="bbox" placeholder="bbox"/>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" onclick="toggleDatGrid('hide');">닫기</button>
-                    <button id="btn-saveDat" class="btn btn-primary"  onclick="saveDat({'datNm' : 'input-datNm', 'datDesc' : 'input-datDesc', 'tblNm' : 'input-tblNm'})">
+                    <button id="btn-saveDat" class="btn btn-primary"  onclick="saveDat({'datNm' : 'input-datNm', 'datDesc' : 'input-datDesc', 'tblNm' : 'input-tblNm', 'srid' : 'input-datSrid', 'bbox' : 'input-datbbox'})">
                         데이터 입력
                     </button>
                 </div>
