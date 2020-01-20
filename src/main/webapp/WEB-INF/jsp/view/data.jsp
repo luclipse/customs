@@ -189,12 +189,16 @@
                             <input type="text" class="form-control" id="input-datDesc" name="datDesc" placeholder="지도 설명"/>
                         </div>
                         <div class="form-group">
-                            <label for="input-datDesc">테이블명</label>
+                            <label for="input-tblNm">테이블명</label>
                             <input type="text" class="form-control" id="input-tblNm" name="tblNm" placeholder="테이블명"/>
                         </div>
                         <div class="form-group" style="display:none;">
                             <label for="input-datDesc">srid</label>
                             <input type="hidden" class="form-control" id="input-datSrid" name="srid" placeholder="srid"/>
+                        </div>
+                        <div class="form-group" style="display:none;">
+                            <label for="input-datDesc">srid</label>
+                            <input type="hidden" class="form-control" id="input-datwgs84bbox" name="wgs84bbox" placeholder="bbox"/>
                         </div>
                         <div class="form-group" style="display:none;">
                             <label for="input-datDesc">srid</label>
@@ -204,7 +208,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" onclick="toggleDatGrid('hide');">닫기</button>
-                    <button id="btn-saveDat" class="btn btn-primary"  onclick="saveDat({'datNm' : 'input-datNm', 'datDesc' : 'input-datDesc', 'tblNm' : 'input-tblNm', 'srid' : 'input-datSrid', 'bbox' : 'input-datbbox'})">
+                    <button id="btn-saveDat" class="btn btn-primary"  onclick="saveDat({'datNm' : 'input-datNm', 'datDesc' : 'input-datDesc', 'tblNm' : 'input-tblNm', 'srid' : 'input-datSrid', 'wgs84bbox' : 'input-datwgs84bbox', 'bbox' : 'input-datbbox'})">
                         데이터 입력
                     </button>
                 </div>
@@ -222,12 +226,16 @@
 <script type="text/javascript" src="<c:url value='/resources/js/lib/jquery-sidebar/jquery.sidebar.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/tui.grid/tui-grid.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/bootstrap-4.4.1/js/bootstrap.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/ol6/ol.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/lib/proj4/proj4.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/HashMap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/util.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/cmm/cmmApi.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/map/mapApi.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/map/mapUtil.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/file/fileApi.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/zip/zip.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/zip/zip-ext.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/map/olMap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/view/data.js'/>"></script>
 </html>

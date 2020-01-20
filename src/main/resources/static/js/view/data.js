@@ -477,21 +477,39 @@ var settingGeoServerWFS = function (idx,srcSno,action) {
     }
 };
 
+var initDatInput = function () {
+    $('#input-datNm').val('');
+    $('#input-datDesc').val('');
+    $('#input-tblNm').val('');
+    $('#input-datSrid').val('');
+    $('#input-datwgs84bbox').val('');
+    $('#input-datbbox').val('');
+}
+
 var addGeoServerLayerWMS = function(layer, srcSno){
+    initDatInput();
     var tblNm = 'GEO;WMS;' + srcSno + ';' + layer.Name ;
-    var bbox = layer.BoundingBox.minx + ' ' + layer.BoundingBox.miny + ',' + layer.BoundingBox.maxx + ' ' + layer.BoundingBox.maxy;
+    var bbox = layer.BoundingBox.minx + ',' + layer.BoundingBox.miny + ',' + layer.BoundingBox.maxx + ',' + layer.BoundingBox.maxy;
+    var extent = layer.LatLonBoundingBox.minx + ',' + layer.LatLonBoundingBox.miny + ',' + layer.LatLonBoundingBox.maxx + ',' + layer.LatLonBoundingBox.maxy;
     $('#input-tblNm').val(tblNm);
     $('#input-datSrid').val(layer.SRS);
+    $('#input-datwgs84bbox').val(extent);
     $('#input-datbbox').val(bbox);
     toggleDatGrid('show');
 };
 
 var addGeoServerLayerWFS = function(layer, srcSno){
+    initDatInput();
     var SRS = layer.DefaultSRS.split(":")[4] + ":" + layer.DefaultSRS.split(":")[5];
     var tblNm = 'GEO;WFS;' + srcSno + ';' + layer.Name ;
-    var bbox = layer['ows:WGS84BoundingBox']["ows:LowerCorner"] + ',' + layer['ows:WGS84BoundingBox']["ows:UpperCorner"];
+    var extent = [
+        layer['ows:WGS84BoundingBox']["ows:LowerCorner"].split(' ')[0],
+        layer['ows:WGS84BoundingBox']["ows:LowerCorner"].split(' ')[1],
+        layer['ows:WGS84BoundingBox']["ows:UpperCorner"].split(' ')[0],
+        layer['ows:WGS84BoundingBox']["ows:UpperCorner"].split(' ')[1]
+    ];
     $('#input-tblNm').val(tblNm);
     $('#input-datSrid').val(SRS);
-    $('#input-datbbox').val(bbox);
+    $('#input-datwgs84bbox').val(extent);
     toggleDatGrid('show');
 };
