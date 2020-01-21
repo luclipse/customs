@@ -46,6 +46,7 @@ var measure = {
 
     listener: null,
 
+    // Measure를 추가
     addMeasure : function() {
         var source = new ol.source.Vector();
         var vector = new ol.layer.Vector({
@@ -72,15 +73,12 @@ var measure = {
         vector.set("srid", mapSrid);
         return vector
     },
+
     getLayer : function() {
       return this.vector;
     },
 
-    /**
-     * Format length output.
-     * @param {ol.geom.LineString} line The line.
-     * @return {string} The formatted length.
-     */
+    // line의 길이를 계산함
     formatLength: function (line) {
         var length = ol.sphere.getLength(line);
         var output;
@@ -94,11 +92,7 @@ var measure = {
         return output;
     },
 
-    /**
-     * Format area output.
-     * @param {ol.geom.Polygon} polygon The polygon.
-     * @return {string} Formatted area.
-     */
+    // polygon 의 면적을 계산함
     formatArea: function (polygon) {
         var area = ol.sphere.getArea(polygon);
         var output;
@@ -112,10 +106,7 @@ var measure = {
         return output;
     },
 
-    /**
-     * Handle pointer move.
-     * @param {ol.MapBrowserEvent} evt The event.
-     */
+    // 마우스 포인터의 이벤트 핸들러
     pointerMoveHandler: function (evt) {
         if (evt.dragging) {
             return;
@@ -138,14 +129,13 @@ var measure = {
         measure.helpTooltipElement.classList.remove('hidden');
     },
 
+    // 마우스 포인터의 지도 범위를 벗어 났을 때 처리
     pointerOutHandler: function () {
         if (measure.helpTooltipElement != null)
             measure.helpTooltipElement.classList.add('hidden');
     },
 
-    /**
-     * Creates a new help tooltip
-     */
+    // help tooltip을 만듬
     createHelpTooltip: function (olmap) {
         if (measure.helpTooltipElement) {
             measure.helpTooltipElement.parentNode.removeChild(measure.helpTooltipElement);
@@ -160,18 +150,14 @@ var measure = {
         olmap.addOverlay(measure.helpTooltip);
     },
 
-    /**
-     * remove help tooltip
-     */
+    // help tooltip을 지움
     removeHelpTooltip: function (olmap) {
         olmap.removeOverlay(measure.helpTooltip);
         measure.helpTooltipElement = null;
         measure.helpTooltip = null;
     },
 
-    /**
-     * Creates a new measure tooltip
-     */
+    // Measure tooltip을 만듬
     createMeasureTooltip: function (olmap) {
         if (measure.measureTooltipElement) {
             measure.measureTooltipElement.parentNode.removeChild(measure.measureTooltipElement);
@@ -186,6 +172,7 @@ var measure = {
         olmap.addOverlay(measure.measureTooltip);
     },
 
+    // Interaction 을 추가함
     addInteraction: function (value) {
         var src = null;
         if (value === 'None') {
@@ -262,6 +249,8 @@ var measure = {
                 ol.Observable.unByKey(measure.listener);
             }, this);
     },
+
+    // measure을 시작함
     measureLayer : function (type) {
         if(this.draw != null) {
             olMap.olMap.removeInteraction(this.draw);

@@ -7,14 +7,17 @@ var btnInputSaveId = 'btn-input-save';
 
 var mapList = null;
 
+// 지도 목록 초기화 함수
 var init = function () {
     initMapList();
 };
 
+// 지도 목록을 가져옴
 var initMapList = function(){
     cmmApi.getTcfMapList(_initMapList);
 };
 
+// 지도 목록을 가져온 후 콜백함수
 var _initMapList = function(maps){
     this.mapList = maps;
     var $DivMapListId = $("#"+divMapListId);
@@ -44,6 +47,8 @@ var _initMapList = function(maps){
         );
     });
 };
+
+// 지도를 수정함
 var editMap = function(sno){
     $('#'+btnInputSaveId).html("수정");
     var map = getMapSno(sno);
@@ -55,6 +60,8 @@ var editMap = function(sno){
     $('#'+inputMapDescId).val(map.mapDesc);
     $('#'+ modalMapInputId).modal('show');
 };
+
+// 지도 sno로 가져옴
 var getMapSno = function (sno) {
     var res = null;
     this.mapList.forEach(function (data) {
@@ -65,6 +72,7 @@ var getMapSno = function (sno) {
     return res;
 };
 
+// 지도를 저장함
 var saveMap = function(){
     var mapNm = $('#'+inputMapNameId).val();
     var mapDesc = $('#'+inputMapDescId).val();
@@ -88,12 +96,15 @@ var saveMap = function(){
     }
 };
 
+// 지도를 저장후 콜백함수
 var _saveMap = function(){
     $('#'+inputMapNameId).val();
     $('#'+inputMapDescId).val();
     initMapList();
     closeInputModal();
 };
+
+// 지도를 삭제
 var delMap = function(sno){
     var r = confirm("삭제 하시 겠습니까?");
     if (r == true) {
@@ -103,10 +114,12 @@ var delMap = function(sno){
         cmmApi.removeTcfMap(data, _delMap);
     }
 };
+// 지도를 삭제후 콜백함수
 var _delMap = function(){
     initMapList();
 };
 
+// 지도 추가 모델을 닫음
 var closeInputModal = function () {
     $('#'+ modalMapInputId).modal('hide');
     $('#'+inputMapSnoId).val('');
@@ -115,6 +128,7 @@ var closeInputModal = function () {
     $('#'+btnInputSaveId).html("생성");
 };
 
+// 해당 sno 지도로 이동함
 var viewMap = function (idx) {
     console.log(idx);
     location.href= baseUrl + "/map/?mapSno=" + idx;

@@ -11,7 +11,7 @@ var selDatasrcListId = 'sel-datasrc-list';
 var tcfDatSrcList = null;
 var geoServerLayerList = null;
 
-
+//초기화
 var init = function () {
     selDatasrcListInit();
     getTcfDat(null);
@@ -19,6 +19,7 @@ var init = function () {
     $('#'+ selDatasrcListId).change(selDatasrcListChange);
 };
 
+//TcfDat를 반환함
 var getTcfDat = function (data) {
     if(data == null){
         cmmApi.getTcfDatList(_gridDataSet);
@@ -27,6 +28,7 @@ var getTcfDat = function (data) {
     }
 };
 
+//_gridDataSet 콜백함수
 var _gridDataSet = function (tcfDatList) {
     this.tcfDatList = tcfDatList;
     var tableData = $('#'+tableDataId);
@@ -75,6 +77,7 @@ var _gridDataSet = function (tcfDatList) {
     }
 };
 
+//TcfDat의 셋팅 메뉴 
 var settingTcfDat = function(idx, action) {
     var data = this.tcfDatList[idx];
     if(action === 'del'){
@@ -83,6 +86,7 @@ var settingTcfDat = function(idx, action) {
     //todo 셋팅 메뉴 개발해야함.
 };
 
+//TcfDat의 저장함수의 콜백함수
 var saveDat = function (inputs) {
     var data = {};
     Object.keys(inputs).forEach(function (value) {
@@ -91,12 +95,14 @@ var saveDat = function (inputs) {
     cmmApi.saveTcfDat(data, _saveDat);
 };
 
+//TcfDat의 저장함수의 콜백함수
 var _saveDat = function(res){
     getTcfDat(null);
     divTableListShow();
     toggleDatGrid('hide');
 };
 
+//레이어를 그리드에 셋팅함
 var gridLayerSet = function (data) {
     if(data == null){
         cmmApi.getTcfDatList(_gridDataSet);
@@ -104,6 +110,8 @@ var gridLayerSet = function (data) {
         cmmApi.getTcfDat(data, _gridDataSet);
     }
 };
+
+// 해당 file이 gis 파일인지 확인함
 var isGISFiles = function() {
     if(fileList.length <= 0) {
         return "";
@@ -142,12 +150,16 @@ var isGISFiles = function() {
     }
     return "Please select correct file format";
 };
+
+// 확장자가 맞는지 확인
 var hasExtension = function(fileNm, exts) {
     //exts = "docx|doc|pdf|xml|bmp|ppt|xls";
     var val = fileNm.toLowerCase();
     var regex = new RegExp("(.*?)\.("+exts+")$");
     return regex.test(val);
 };
+
+// 파일업로드 관련 함수들
 (function(obj) {
     zip.workerScriptsPath = "/js/lib/zip/";
     var requestFileSystem = obj.webkitRequestFileSystem || obj.mozRequestFileSystem || obj.requestFileSystem;
@@ -271,7 +283,7 @@ var hasExtension = function(fileNm, exts) {
 
 })(this);
 
-
+// zip 파일 업로드 함수
 var zipFileUpload = function (saveFileToDat, fileApiAlert, cbSaveDat) {
     if(zipFileInput.files.length <= 0) {
         alert("select Zip File");
@@ -281,6 +293,7 @@ var zipFileUpload = function (saveFileToDat, fileApiAlert, cbSaveDat) {
     fileApi.zipFileToPostGis(saveFileToDat, fileApiAlert, cbSaveDat)
 };
 
+// 데이터 그리드를 토굴함
 var toggleDatGrid = function(action) {
     $('#div-upload-grid').hide();
     if(action === 'show'){
@@ -289,11 +302,13 @@ var toggleDatGrid = function(action) {
         $('#div-dat-grid').modal('hide');
     }
 };
+// 데이터 업로드 화면을 토굴함 
 var toggleUploadGrid = function() {
     $('#div-dat-grid').modal('hide');
     $('#div-upload-grid').toggle();
 };
 
+//데이터를 삭제함
 var deleteDat = function(){
     var row = dataGrid.getRow(dataGrid.getFocusedCell().rowKey);
     var datSno = null;
@@ -302,6 +317,8 @@ var deleteDat = function(){
     }
     _deleteDat(datSno);
 };
+
+//데이터를 삭제함
 var _deleteDat = function (datSno) {
     if(datSno == null) {
         alert("데이터를 선택해주세요");
@@ -312,24 +329,30 @@ var _deleteDat = function (datSno) {
         cmmApi.removeTcfDat(data, __deleteDat);
     }
 };
+
+//데이터를 삭제후 다시 가져옴
 var __deleteDat = function(res){
     getTcfDat(null);
 };
 
+//데이터 div를 출력함
 var divDatListShow = function() {
     $('#div-table-list').hide();
     $('#div-dat-list').show();
 };
 
+//테이블 div를 출력함
 var divTableListShow = function() {
     $('#div-dat-list').hide();
     $('#div-table-list').show();
 };
 
+// 지오메트리 테이블을 가져옴
 var getGeoColumn = function () {
     mapApi.getGeometryTable(_getGeoColumn);
 };
 
+// 지오메트리 테이블을 가져오고 콜백 함수
 var _getGeoColumn = function (geoColumns) {
     this.geoColumnList = geoColumns;
     var tableData = $('#'+tableGeoColumId);
@@ -343,11 +366,15 @@ var _getGeoColumn = function (geoColumns) {
         });
     }
 };
+
+// 지오메트리 테이블이 없을때 처리 함수
 var emptyTableGeoColum = function () {
     return  '<tr>' +
             '<td colspan="5" class="text-center"><h3>데이터 없음</h3></td>' +
             '</tr>';
 };
+
+// 지오메트리 테이블을 가져와 테이블로 출력
 var addTableGeoColum= function(idx, name, srid, type, addFuction) {
     return  '<tr>' +
             '<td>'+ (idx+1) +'</td>' +
@@ -368,17 +395,22 @@ var addTableGeoColum= function(idx, name, srid, type, addFuction) {
             '</tr>';
 };
 
+// 지오메트리 테이블의 셋팅 함수
 var settingGeoColumn = function (idx, action) {
     var data = this.geoColumnList[idx];
     if(action === 'add'){
         addGeoColumn(data)
     }
 };
+
+// 지오메트리 테이블을 데이터로 추가 화면 출력
 var addGeoColumn = function(geoColumn){
+    initDatInput();
     $('#input-tblNm').val(geoColumn.f_table_name);
     toggleDatGrid('show');
 };
 
+// 데이터 소스 목록을 초기화
 var selDatasrcListInit = function () {
     //기본 데이터 베이스
     var $selDatasrcList = $('#'+ selDatasrcListId);
@@ -390,6 +422,7 @@ var selDatasrcListInit = function () {
     cmmApi.getTcfDatSrc(_selDatasrcListInit);
 };
 
+// 데이터 소스 목록을 초기화 콜백
 var _selDatasrcListInit = function (items) {
     this.tcfDatSrcList = items;
     var $selDatasrcList = $('#'+ selDatasrcListId);
@@ -408,6 +441,7 @@ var _selDatasrcListInit = function (items) {
     });
 };
 
+// 데이터 소스 목록을 선택 처리 함수
 var selDatasrcListChange = function() {
     var value = $('#'+selDatasrcListId + ' option:selected').val();
     //기본데이터 베이스
@@ -425,15 +459,19 @@ var selDatasrcListChange = function() {
     }
 };
 
+// 지오서버 WMS 목록을 가져옴
 var getGeoServerWMS = function (idx) {
     var geoserverData = this.tcfDatSrcList[idx];
     mapApi.getGeoServerLayers(geoserverData,'WMS', _getGeoServerWMS);
 };
+
+// 지오서버 WFS 목록을 가져옴
 var getGeoServerWFS = function (idx) {
     var geoserverData = this.tcfDatSrcList[idx];
     mapApi.getGeoServerLayers(geoserverData,'WFS', _getGeoServerWFS);
 };
 
+// 지오서버 WMS 목록 콜백함수
 var _getGeoServerWMS = function (geoserverLayers, geoserverData) {
     this.geoServerLayerList = geoserverLayers;
     var tableData = $('#'+tableGeoColumId);
@@ -448,6 +486,7 @@ var _getGeoServerWMS = function (geoserverLayers, geoserverData) {
     }
 };
 
+// 지오서버 WFS 목록 콜백함수
 var _getGeoServerWFS = function (geoserverLayers, geoserverData) {
     this.geoServerLayerList = geoserverLayers;
     var tableData = $('#'+tableGeoColumId);
@@ -463,6 +502,7 @@ var _getGeoServerWFS = function (geoserverLayers, geoserverData) {
     }
 };
 
+// 지오서버 WFS 셋팅 함수
 var settingGeoServerWMS = function (idx,srcSno,action) {
     var layer = this.geoServerLayerList[idx];
     if(action === 'add'){
@@ -470,6 +510,7 @@ var settingGeoServerWMS = function (idx,srcSno,action) {
     }
 };
 
+// 지오서버 WMS 셋팅 함수
 var settingGeoServerWFS = function (idx,srcSno,action) {
     var layer = this.geoServerLayerList[idx];
     if(action === 'add'){
@@ -477,6 +518,7 @@ var settingGeoServerWFS = function (idx,srcSno,action) {
     }
 };
 
+// 데이터 입력 초기화 함수
 var initDatInput = function () {
     $('#input-datNm').val('');
     $('#input-datDesc').val('');
@@ -484,8 +526,9 @@ var initDatInput = function () {
     $('#input-datSrid').val('');
     $('#input-datwgs84bbox').val('');
     $('#input-datbbox').val('');
-}
+};
 
+// 지오서버 WMS를 데이터로 추가 화면 출력
 var addGeoServerLayerWMS = function(layer, srcSno){
     initDatInput();
     var tblNm = 'GEO;WMS;' + srcSno + ';' + layer.Name ;
@@ -498,6 +541,7 @@ var addGeoServerLayerWMS = function(layer, srcSno){
     toggleDatGrid('show');
 };
 
+// 지오서버 WFS를 데이터로 추가 화면 출력
 var addGeoServerLayerWFS = function(layer, srcSno){
     initDatInput();
     var SRS = layer.DefaultSRS.split(":")[4] + ":" + layer.DefaultSRS.split(":")[5];

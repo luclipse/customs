@@ -2,6 +2,7 @@ var cmmApi = {
     CD_FAILURE : 'FAILURE',
     CD_SUCCESS : 'SUCCESS',
 
+    // TcfDat 목록을 가져옴
     getTcfDatList : function (callback, failCallback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/getTcfDatList",
@@ -14,6 +15,8 @@ var cmmApi = {
             }
         });
     },
+
+    // TcfDat를 가져옴
     getTcfDat : function (data, callback, failCallback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/getTcfDat",
@@ -27,6 +30,8 @@ var cmmApi = {
             }
         });
     },
+    
+    //sno로 TcfDat를 가져옴
     getTcfDatBySno : function (layer, style, callback, failCallback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/getTcfDatBySno",
@@ -40,6 +45,8 @@ var cmmApi = {
             }
         });
     },
+
+    // TcfDat를 저장함
     saveTcfDat : function (data, callback, failCallback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/saveTcfDat",
@@ -54,6 +61,8 @@ var cmmApi = {
             }
         });
     },
+
+    // TcfDat를 삭제함
     removeTcfDat : function (data, callback, failCallback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/removeTcfDat",
@@ -68,6 +77,8 @@ var cmmApi = {
             }
         });
     },
+
+    // tcfMap 목록을 가져옴
     getTcfMapList : function (callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfMap/getTcfMapList",
@@ -76,6 +87,8 @@ var cmmApi = {
             }
         });
     },
+
+    // tcfMap을 가져옴
     getTcfMap : function (data, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfMap/getTcfMap",
@@ -85,6 +98,8 @@ var cmmApi = {
             }
         });
     },
+
+    // sno로 tcfMap을 가져옴
     getTcfMapBySno : function (sno, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfMap/getTcfMapBySno",
@@ -94,6 +109,8 @@ var cmmApi = {
             }
         });
     },
+
+    // tcfMap을 저장함
     saveTcfMap : function (data, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfMap/saveTcfMap",
@@ -104,6 +121,8 @@ var cmmApi = {
             }
         });
     },
+
+    // tcfMap을 삭제함
     removeTcfMap : function (data, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfMap/removeTcfMap",
@@ -114,6 +133,8 @@ var cmmApi = {
             }
         });
     },
+
+    // tcfLay 목록을 가져옴
     getTcfLayList : function (mapSno, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfLay/getTcfLayList",
@@ -123,6 +144,8 @@ var cmmApi = {
             }
         });
     },
+    
+    // tcfLay를 가져옴
     getTcfLay : function (data, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfLay/getTcfLay",
@@ -132,6 +155,8 @@ var cmmApi = {
             }
         });
     },
+
+    // sno로 tcfLay를 가져옴
     getTcfLayBySno : function (sno, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfLay/getTcfLayBySno",
@@ -141,6 +166,8 @@ var cmmApi = {
             }
         });
     },
+
+    // tcfLay를 저장함
     saveTcfLay : function (data, callback, tcfDat) {
         $.ajax({
             url: serverMapCmmHost + "/tcfLay/saveTcfLay",
@@ -151,6 +178,8 @@ var cmmApi = {
             }
         });
     },
+
+    // tcfLay를 삭제함
     removeTcfLay : function (data, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfLay/removeTcfLay",
@@ -162,6 +191,7 @@ var cmmApi = {
         });
     },
 
+    // sno로 tcfLayStyle를 가져옴
     getTcfLayStyleBySno : function (layer, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfLayStyle/getTcfLayStyleBySno",
@@ -171,6 +201,8 @@ var cmmApi = {
             }
         });
     },
+
+    // tcfLayStyle를 저장함
     saveTcfLayStyle : function (data, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfLayStyle/saveTcfLayStyle",
@@ -183,6 +215,8 @@ var cmmApi = {
             }
         });
     },
+
+    // tcfLayStyle를 삭제함
     removeTcfLayStyle : function (data, callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfLayStyle/removeTcfLayStyle",
@@ -194,12 +228,24 @@ var cmmApi = {
         });
     },
 
+    // TcfDatSrc를 가져옴
     getTcfDatSrc : function (callback) {
         $.ajax({
             url: serverMapCmmHost + "/tcfDatSrc/getTcfDatSrc",
             data : {},
             success: function (res) {
                 callback(res);
+            }
+        });
+    },
+
+    // sno로 TcfDatSrc를 가져옴
+    getTcfDatSrcBySno : function (layer, style, data, callback) {
+        $.ajax({
+            url: serverMapCmmHost + "/tcfDatSrc/getTcfDatSrc",
+            data : {srcSno : data.tblNm.split(';')[2]},
+            success: function (res) {
+                callback(layer, style, data, res);
             }
         });
     },

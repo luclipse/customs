@@ -18,6 +18,7 @@ var olStyle = {
     divRadiusWidthId : null,
     inputRadiusWidthId : null,
 
+    // 스타일 관련 초기환
     initStyle : function(divLineColorId, divFillColorId, inputStrokeWidthId, divRadiusWidthId, inputRadiusWidthId) {
         this.divLineColorId = divLineColorId;
         this.divFillColorId = divFillColorId;
@@ -28,6 +29,7 @@ var olStyle = {
         this.initLineColor();
     },
 
+    // line 컬러 초기화
     initLineColor : function(){
         this.lineColor = null;
         this.lineColor = document.querySelector('#'+this.divLineColorId);
@@ -35,6 +37,7 @@ var olStyle = {
         this.popupLineColor = new Picker(this.lineColor);
     },
 
+    // 컬러 픽커 line 셋팅
     setColorPickerLineColor : function(layer) {
         var geomType = layer.get("geomType").toUpperCase();
         if(geomType === 'MULTIPOLYGON' || geomType === 'POLYGON') {
@@ -47,6 +50,7 @@ var olStyle = {
         }
     },
 
+    // fill 컬러 초기화
     initFillColor : function(){
         this.fillColor = null;
         this.fillColor = document.querySelector('#'+this.divFillColorId);
@@ -54,6 +58,7 @@ var olStyle = {
         this.popupFillColor = new Picker(this.fillColor);
     },
 
+    // 컬러 픽커 fill 셋팅
     setColorPickerFillColor : function(layer){
         var geomType = layer.get("geomType").toUpperCase();
         if(geomType === 'MULTIPOLYGON' || geomType === 'POLYGON') {
@@ -65,6 +70,7 @@ var olStyle = {
             // Todo lineString Style
         }
     },
+    // stroke 넓이 셋팅
     setStrokeWidth : function(layer){
         var geomType = layer.get("geomType").toUpperCase();
         var selStrokeWidth = $('#'+ this.inputStrokeWidthId);
@@ -82,6 +88,7 @@ var olStyle = {
         });
     },
 
+    // 반경 넓이 셋팅
     setRadiusWidth : function(layer){
         var geomType = layer.get("geomType").toUpperCase();
         var selRadiusWidth = $('#'+ this.inputRadiusWidthId);
@@ -100,6 +107,7 @@ var olStyle = {
         });
     },
 
+    // 컬러 픽커 초기화
     initColorPicker : function(mColor, mPopupColor, baseColor){
         mPopupColor.onDone = null;
         mPopupColor.onDone = function(e) {
@@ -111,6 +119,7 @@ var olStyle = {
         mPopupColor.setColor(baseColor);
         mColor.style.background = mPopupColor.color.rgbaString;
     },
+    // 스타일 셋팅
     setStyle : function(layer){
         if(layer == null)
             return;
@@ -124,7 +133,7 @@ var olStyle = {
             this.setPolygonStrokeColor(layer, line);
             this.setPolygonStrokeWidth(layer, this.lineWidth);
         } else if(geomType === 'MULTIPOINT' || geomType === 'POINT'){
-            this.getPointStyle(layer, line, this.lineWidth, fill, this.radiusWidth);
+            this.setPointStyle(layer, line, this.lineWidth, fill, this.radiusWidth);
         } else if(geomType === 'MULTILINESTRING' || geomType === 'LINESTRING'){
 
         }
@@ -145,18 +154,22 @@ var olStyle = {
         cmmApi.saveTcfLayStyle(data, null);
     },
 
+    // fill 스타일 반환함
     getFillStyle : function (rgbaString) {
         return new ol.style.Fill({
                 color: rgbaString
         });
     },
 
+    // Stroke 스타일 반환함
     getStroke : function (rgbaString, width) {
         return new ol.style.Stroke({
             color: rgbaString, 
             width : width
         });
     },
+
+    // SvgCircle 스타일 반환함
     getSvgCircleStyle : function (strokeColor, strokeWidth, fillColor, radius) {
         strokeWidth = Number(strokeWidth);
         radius = Number(radius);
@@ -172,6 +185,8 @@ var olStyle = {
             })
         });
     },
+    
+    // Image 스타일 반환함
     getImageStyle : function (anchorX, anchorY, src) {
         return new ol.style.Style({
             image: new ol.style.Icon({
@@ -183,6 +198,8 @@ var olStyle = {
             })
         });
     },
+
+    // Polygon 스타일 반환함
     getPolygonStyle : function (stroke, fill) {
         return new ol.style.Style({
                 stroke : stroke,
@@ -190,15 +207,19 @@ var olStyle = {
         });
     },
 
+    // Line 스타일 반환함
     getLineStyle : function (stroke) {
         return new ol.style.Style({
             stroke : stroke
         });
     },
 
+    // 스타일을 문자로 변환하여 반환함
     getStringStyle : function (style) {
         return JSON.stringify(style).replace(/_/gi, "");
     },
+    
+    // 문자 를 스타일로 변환하여 반환
     getStrToStyle : function (styleStr) {
         var mFill = null;
         var mStroke = null;
@@ -229,24 +250,32 @@ var olStyle = {
         }
         return res;
     },
-    getPointStyle : function(layer, strokeColor, strokeWidth, fillColor, radius) {
+    // Point 스타일 셋팅
+    setPointStyle : function(layer, strokeColor, strokeWidth, fillColor, radius) {
         return layer.setStyle(this.getSvgCircleStyle(strokeColor, strokeWidth, fillColor, radius));
     },
+    
+    // ol layer 의 polygon 의 fill 의 컬러를 반환함
     getPolygonFillColor: function(layer) {
         return layer.getStyle().getFill().getColor();
     },
+    // ol layer 의 polygon 의 fill 의 컬러를 셋팅함
     setPolygonFillColor: function(layer, color) {
         return layer.getStyle().getFill().setColor(color);
     },
+    // ol layer 의 polygon 의 strok 의 컬러를 반환함
     getPolygonStrokeColor: function(layer) {
         return layer.getStyle().getStroke().getColor();
     },
+    // ol layer 의 polygon 의 strok 의 컬러를 셋팅함
     setPolygonStrokeColor: function(layer, color) {
         return layer.getStyle().getStroke().setColor(color);
     },
+    // ol layer 의 polygon 의 strok 의 넓이를 반환함
     getPolygonStrokeWidth: function(layer) {
         return layer.getStyle().getStroke().getWidth();
     },
+    // ol layer 의 polygon 의 strok 의 넓이를 셋팅함
     setPolygonStrokeWidth: function(layer, width) {
         return layer.getStyle().getStroke().setWidth(width);
     }

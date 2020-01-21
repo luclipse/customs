@@ -125,7 +125,7 @@ var addNewLayer = function () {
         mapSno : mapSno,
         layNm : row.datNm,
         layVisYn : 'Y',
-        layIdx : idx
+        layIdx : idx,
     };
     cmmApi.saveTcfLay(data, cbAddNewLayerStyle, row);
 };
@@ -133,20 +133,28 @@ var addNewLayer = function () {
 // 새로운 레이어 스타일 추가 콜백
 var cbAddNewLayerStyle = function (res, dat) {
     var style = '';
-    var type = dat.geomType.toUpperCase();
-    if(type === 'MULTIPOLYGON' || type=== 'POLYGON') {
-        style = olStyle.getPolygonStyle(olStyle.getStroke(random_rgb(), 1) , olStyle.getFillStyle(random_rgba()));
-    } else if(type=== 'MULTIPOINT' || type === 'POINT'){
-        style = olStyle.getSvgCircleStyle(random_rgb(), 1,random_rgb(), 5);
-    } else if(type=== 'MULTILINESTRING' || type === 'LINESTRING'){
-        style = olStyle.getLineStyle(olStyle.getStroke(random_rgb(), 1));
+    if(dataGrid.getRow(4).tblNm.split(';').length === 4 && dataGrid.getRow(4).tblNm.split(';')[1] === 'WFS'){
+        //지오서버에서 스타일을 가져와 저장하려면 다른 방식으로 해야함. 현재는 지오서버에서 스타일을 지정해야함.
+        var data = {
+            laySno : res.laySno,
+            styleText : ''
+        };
     } else {
-
+        var type = dat.geomType.toUpperCase();
+        if(type === 'MULTIPOLYGON' || type=== 'POLYGON') {
+            style = olStyle.getPolygonStyle(olStyle.getStroke(random_rgb(), 1) , olStyle.getFillStyle(random_rgba()));
+        } else if(type=== 'MULTIPOINT' || type === 'POINT'){
+            style = olStyle.getSvgCircleStyle(random_rgb(), 1,random_rgb(), 5);
+        } else if(type=== 'MULTILINESTRING' || type === 'LINESTRING'){
+            style = olStyle.getLineStyle(olStyle.getStroke(random_rgb(), 1));
+        } else {
+            //추후 다른 타입
+        }
+        var data = {
+            laySno : res.laySno,
+            styleText : olStyle.getStringStyle(style)
+        };
     }
-    var data = {
-        laySno : res.laySno,
-        styleText : olStyle.getStringStyle(style)
-    };
     cmmApi.saveTcfLayStyle(data, cbAddNewLayer);
 };
 
@@ -171,7 +179,28 @@ var getLayerToStyle = function (layer) {
 
 //레이어 추가함.
 var addLayer = function (layer, style, data) {
-    olMap.addVectorLayer(serverMapHost + '/geoCalc/getMap', 'EPSG:3857', 0, 200, style, null, layer, data);
+    if(data.tblNm.split(';').length === 4 && data.tblNm.split(';')[0]==='GEO'){
+        addGeoLayer(layer, style, data);
+    } else {
+        olMap.addVectorLayer(serverMapHost + '/geoCalc/getMap', 'EPSG:3857', 0, 200, style, null, layer, data);
+        grid.resetData(olMap.getLayerListJson('layer,baseLayer'));
+        $('#div-data-grid').hide();
+    }
+};
+
+//지오서버 레이어 추가함
+var addGeoLayer = function (layer, style, data) {
+    cmmApi.getTcfDatSrcBySno(layer, style, data, _addGeoLayer);
+};
+
+//지오서버 레이어 추가 콜백 함수
+var _addGeoLayer = function (layer, style, data, src) {
+    if(data.tblNm.split(';').length === 4 && data.tblNm.split(';')[1]==='WFS'){
+        olMap.addGeoServerWFSLayer(src[0].srcUrl, 'EPSG:3857', 0, 200, style, null, layer, data);
+    } else {
+        olMap.addGeoServerWMSLayer(src[0].srcUrl, 'EPSG:3857', 0, 200, style, null, layer, data);
+    }
+
     grid.resetData(olMap.getLayerListJson('layer,baseLayer'));
     $('#div-data-grid').hide();
 };
