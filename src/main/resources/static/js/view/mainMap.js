@@ -82,8 +82,8 @@ LXMap.prototype.addLayer = function(layersInfo){
     var node_vectorSource = new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         url: function(extent) {
-            return 'http://192.168.0.11:9001/map/geoCalc/getMap?layerName='
-                + layersInfo.layNm +'&bbox=' + ol.proj.transform(extent, 'EPSG:3857', layersInfo.datVo.srid).join(',')
+            return serverMapHost + '/geoCalc/getMap?layerName='
+                + layersInfo.datVo.tblNm +'&bbox=' + ol.proj.transform(extent, 'EPSG:3857', layersInfo.datVo.srid).join(',')
                 + '&fromProj=' + layersInfo.datVo.srid + '&toProj=EPSG:3857';
         },
         strategy: ol.loadingstrategy.bbox,

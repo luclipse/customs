@@ -236,8 +236,8 @@ var olMap = {
         }
         var formatWkt = new ol.format.WKT();
         var ft = olMap.layers.drawLayer.getSource().getFeatures()[olMap.layers.drawLayer.getSource().getFeatures().length-1];
-        src.replace('EPSG:', '');
-        dest.replace('EPSG:', '');
+        src = src.replace('EPSG:', '');
+        dest = dest.replace('EPSG:', '');
         ft.getGeometry().transform('EPSG:'+src, 'EPSG:'+dest);
         return formatWkt.writeFeature(ft);
     },

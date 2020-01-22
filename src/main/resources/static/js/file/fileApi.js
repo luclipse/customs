@@ -25,7 +25,7 @@ var fileApi = {
         });
     },
     zipFileDownload : function (area, row) {
-        var url = serverFileHost + "/gdal/postGisToFile?geom="+encodeURIComponent(area)+"&tableNm="+encodeURIComponent(row.tblName);
+        var url = serverFileHost + "/gdal/postGisToFile?geom="+encodeURIComponent(area)+"&tableNm="+encodeURIComponent(row.tblName)+"&geomType="+encodeURIComponent(row.geomType);
         var a = document.createElement('a');
         a.setAttribute('href', /*'data:text/plain;charset=utf-8,'+*/url);
         //a.setAttribute('download', row.name + ".zip");
