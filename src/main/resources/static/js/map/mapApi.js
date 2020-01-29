@@ -47,7 +47,7 @@ var mapApi = {
         });
     },
     //해당 extend 에서 WFS 데이터를 가져옴.
-    getVectorLayerExtend : function  (url, toPrj, minResolution, maxResolution, style, group, layer, data) {
+    getVectorLayerExtend : function (url, toPrj, minResolution, maxResolution, style, data) {
         var source = new ol.source.Vector({
             format: new ol.format.GeoJSON(),
             url: function(extent) {
@@ -57,27 +57,15 @@ var mapApi = {
             strategy: ol.loadingstrategy.bbox,
             crossOrigin: "Anonymous"
         });
-        var vector = new ol.layer.Vector({
+        return new ol.layer.Vector({
             source: source,
             style: style,
-            minResolution : minResolution,
-            maxResolution : maxResolution
+            minResolution: minResolution,
+            maxResolution: maxResolution
         });
-        vector.set("tcfDat", data);
-        vector.set("tcfLay", layer);
-        vector.set("name", layer.layNm);
-        vector.set("tblName", data.tblNm);
-        vector.set("type", "layer");
-        vector.set("srid", data.srid);
-        vector.set("geomType", data.geomType);
-        //vector.setMaxZoom(maxZoom);
-        if(group != null) {
-            //todo 레이어 그룹
-        }
-        return vector;
     },
     //해당 extend 에서 Geoserver의 WFS 데이터를 가져옴.
-    getGeoServerVectorLayerExtend : function  (url, toPrj, minResolution, maxResolution, style, group, layer, data) {
+    getGeoServerVectorLayerExtend : function  (url, toPrj, minResolution, maxResolution, style, data) {
         var source = new ol.source.Vector({
             format: new ol.format.GeoJSON(),
             url: function(extent) {
@@ -92,54 +80,29 @@ var mapApi = {
             crossOrigin: "anonymous",
             serverType : 'geoserver'
         });
-        var vector = new ol.layer.Vector({
+        return new ol.layer.Vector({
             source: source,
             style: style,
-            minResolution : minResolution,
-            maxResolution : maxResolution
+            minResolution: minResolution,
+            maxResolution: maxResolution
         });
-        vector.set("tcfDat", data);
-        vector.set("tcfLay", layer);
-        vector.set("name", layer.layNm);
-        vector.set("tblName", data.tblNm);
-        vector.set("type", "layer");
-        vector.set("srid", data.srid);
-        vector.set("geomType", data.geomType);
-        //vector.setMaxZoom(maxZoom);
-        if(group != null) {
-            //todo 레이어 그룹
-        }
-        return vector;
     },
     
     //해당 extend 에서 Geoserver의 WMS 데이터를 가져옴.
-    getGeoServerTileLayerExtend : function  (url, toPrj, minResolution, maxResolution, style, group, layer, data) {
+    getGeoServerTileLayerExtend : function  (url, minResolution, maxResolution, data) {
         var source = new ol.source.TileWMS({
             url: url + '/wms',
             params: {'LAYERS': data.tblNm.split(';')[3], 'TILED': true},
             serverType: 'geoserver',
             transition: 0
         });
-
-        var layers = new ol.layer.Tile({
+        return new ol.layer.Tile({
             // TODO 임시로 투명도 부여
-            opacity : 0.5,
+            opacity: 0.5,
             source: source,
-            minResolution : minResolution,
-            maxResolution : maxResolution
+            minResolution: minResolution,
+            maxResolution: maxResolution
         });
-        layers.set("tcfDat", data);
-        layers.set("tcfLay", layer);
-        layers.set("name", layer.layNm);
-        layers.set("tblName", data.tblNm);
-        layers.set("type", "layer");
-        layers.set("srid", data.srid);
-        layers.set("geomType", data.geomType);
-        //vector.setMaxZoom(maxZoom);
-        if(group != null) {
-            //todo 레이어 그룹
-        }
-        return layers;
     },
 
     // geometry table 목록을 가져옴

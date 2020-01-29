@@ -29,7 +29,7 @@
 
         #map {
             width: 100%;
-            height: 93vh;
+            height: 100vh;
         }
 
         .map-container {
@@ -79,6 +79,7 @@
             height : 100%;
             background: #51ffcf;
         }
+
         .dataBox {
             position: fixed;
             left: 300px;
@@ -90,6 +91,21 @@
             position: fixed;
             left: 300px;
             top: 7vh;
+            width: 300px;
+        }
+        .timeSeries {
+            padding: 10px;
+            position: fixed;
+            left: 50%;
+            bottom: 10px;
+            width: 300px;
+
+        }
+
+        .data-info {
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
             width: 300px;
         }
         .measureBox {
@@ -166,10 +182,46 @@
         .mouse-select {
             background-color: #ccecff !important;
         }
+
+         .slidecontainer {
+             width: 100%;
+         }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 25px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #5b85af;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #1c41af;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body onload="init()">
-    <header class="navbar navbar-dark bg-dark" style="height: 7vh;margin-bottom:0px">
+    <%--<header class="navbar navbar-dark bg-dark" style="height: 7vh;margin-bottom:0px">
         <div class="navbar-nav-scroll">
             <ul class="navbar-nav bd-navbar-nav flex-row">
                 <li class="nav-item" style="padding-right: .5rem;padding-left: .5rem;">
@@ -180,8 +232,8 @@
                 </li>
             </ul>
         </div>
-    </header>
-    <div class="wrapper" style="height: 93vh">
+    </header>--%>
+    <div class="wrapper" style="height: 100vh">
         <nav id="sidebar">
             <div class="sidebar-header text-center">
                 <h3>LAYER</h3>
@@ -191,7 +243,7 @@
             </button>
             <div id="grid" style="width:300px;"></div>
             <div id="div-layer" style="width:300px;"></div>
-            <ul class="list-unstyled CTAs">
+            <%--<ul class="list-unstyled CTAs">
                 <li>
                     <a href="#" onclick="toggleDownload();" class="download">다운로드</a>
                 </li>
@@ -207,7 +259,7 @@
                 <li>
                     <a href="#" onclick="toggleStyle();" class="download">스타일</a>
                 </li>
-            </ul>
+            </ul>--%>
         </nav>
         <div class="map-container">
             <div id="map"></div>
@@ -301,7 +353,13 @@
             <button type="button" class="btn btn-secondary" onclick="toggleStyle();">창 닫기</button>
         </div>
     </div>
+    <div id="div-timeseries" class="card timeSeries" >
+        <label id="label-timeseries"></label>
+        <input type="range" min="0" max="1" value="0" class="slider" id="input-timeseries" oninput="idInputTimeSeriesChangeEvent(this.value)" onchange="idInputTimeSeriesChangeEvent(this.value)">
+    </div>
 
+    <div id="div-data-info" class="card data-info" style="display: none">
+    </div>
    <%-- <div class="sidebars">
         <div class="sidebar down">
             <button onclick="draw.drawLayer('Point')">Point</button>
@@ -337,6 +395,8 @@
     var mapSno = ${mapSno};
     var mapSrid = '3857';
     var addrSrid = '5181';
+    var minResolution = 0;
+    var maxResolution = 200;
 </script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/jquery/jquery-1.12.4.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/lib/jquery-sidebar/jquery.sidebar.js'/>"></script>

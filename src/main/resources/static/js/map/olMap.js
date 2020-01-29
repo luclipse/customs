@@ -95,6 +95,7 @@ var olMap = {
         this.olMap.addLayer(this.baseLayer);
         this.layerList.push(this.baseLayer);
         this.layers.baseLayer = this.baseLayer;
+
     },
 
     // 백터 레이어를 추가함
@@ -103,13 +104,23 @@ var olMap = {
             return "Already exists with the same name";
         }
         var st = olStyle.getStrToStyle(style.styleText);
-        var vector = mapApi.getVectorLayerExtend(url, toPrj, minResolution, maxResolution, st, group, layer, data);
-        vector.set("styleStr", olStyle.getStringStyle(st));
-        vector.set("style", style);
-        this.olMap.addLayer(vector);
-        this.layerList.push(vector);
-        this.layers.layer.push(vector);
-        return "addVectorLayer Success"
+        var olLayer = mapApi.getVectorLayerExtend(url, toPrj, minResolution, maxResolution, st, data);
+        olLayer.set("tcfDat", data);
+        olLayer.set("tcfLay", layer);
+        olLayer.set("name", layer.layNm);
+        olLayer.set("tblName", data.tblNm);
+        olLayer.set("type", "layer");
+        olLayer.set("srid", data.srid);
+        olLayer.set("geomType", data.geomType);
+        olLayer.set("styleStr", olStyle.getStringStyle(st));
+        olLayer.set("style", style);
+        if(group != null) {
+            //todo 레이어 그룹
+        }
+        this.olMap.addLayer(olLayer);
+        this.layerList.push(olLayer);
+        this.layers.layer.push(olLayer);
+        return olLayer;
     },
 
     // 지오서버 WFS 레이어를 추가함.
@@ -118,13 +129,23 @@ var olMap = {
             return "Already exists with the same name";
         }
         var st = olStyle.getStrToStyle(style.styleText);
-        var vector = mapApi.getGeoServerVectorLayerExtend(url, toPrj, minResolution, maxResolution, st, group, layer, data);
-        vector.set("styleStr", olStyle.getStringStyle(st));
-        vector.set("style", style);
-        this.olMap.addLayer(vector);
-        this.layerList.push(vector);
-        this.layers.layer.push(vector);
-        return "addVectorLayer Success"
+        var olLayer = mapApi.getGeoServerVectorLayerExtend(url, toPrj, minResolution, maxResolution, st, data);
+        olLayer.set("tcfDat", data);
+        olLayer.set("tcfLay", layer);
+        olLayer.set("name", layer.layNm);
+        olLayer.set("tblName", data.tblNm);
+        olLayer.set("type", "layer");
+        olLayer.set("srid", data.srid);
+        olLayer.set("geomType", data.geomType);
+        olLayer.set("styleStr", olStyle.getStringStyle(st));
+        olLayer.set("style", style);
+        if(group != null) {
+            //todo 레이어 그룹
+        }
+        this.olMap.addLayer(olLayer);
+        this.layerList.push(olLayer);
+        this.layers.layer.push(olLayer);
+        return olLayer;
     },
 
     // 지오서버 WMS 레이어를 추가함.
@@ -133,13 +154,29 @@ var olMap = {
             return "Already exists with the same name";
         }
         //var st = olStyle.getStrToStyle(style.styleText);
-        var vector = mapApi.getGeoServerTileLayerExtend(url, toPrj, minResolution, maxResolution, style, group, layer, data);
-        vector.set("styleStr", '');
-        vector.set("style", '');
-        this.olMap.addLayer(vector);
-        this.layerList.push(vector);
-        this.layers.layer.push(vector);
-        return "addVectorLayer Success"
+        var olLayer = mapApi.getGeoServerTileLayerExtend(url, minResolution, maxResolution, data);
+        olLayer.set("tcfDat", data);
+        olLayer.set("tcfLay", layer);
+        olLayer.set("name", layer.layNm);
+        olLayer.set("tblName", data.tblNm);
+        olLayer.set("type", "layer");
+        olLayer.set("srid", data.srid);
+        olLayer.set("geomType", data.geomType);
+        olLayer.set("styleStr", '');
+        olLayer.set("style", '');
+
+        if(group != null) {
+            //todo 레이어 그룹
+        }
+        this.olMap.addLayer(olLayer);
+        this.layerList.push(olLayer);
+        this.layers.layer.push(olLayer);
+        /*if(this.layerList.length > 1){
+            vector.getSource().on('tileloadend', function() {
+                //todo tileloadend
+            });
+        }*/
+        return olLayer;
     },
 
     //draw 레이어를 추가함.
@@ -256,6 +293,21 @@ var olMap = {
         }
         return null;
     },
+    getTimeSeriesLayer :function(name, idx){
+        var res = null;
+        var layer = this.getLayersByName(name);
+        var timeSeriesOlLayer = layer.get("timeSeriesOlLayer");
+        timeSeriesOlLayer.forEach(function (item) {
+            var tcfTimeSeries = item.get("timeSeries");
+            if(JSON.parse(tcfTimeSeries.timeSeriesDesc).index == idx){
+                res = item;
+            }
+        });
+        return res;
+    },
+    getTimeSeriesLayerList :function(name){
+        return this.getLayersByName(name).get("timeSeriesOlLayer");
+    },
     // 레이어 목록에서 종류로 검색하여 레이어 목록을 리턴함
     getLayersByType : function (type) {
         var types = type.split(',');
@@ -297,6 +349,10 @@ var olMap = {
             }
         }
         return resList;
+    },
+    setFit : function (layer) {
+        var center = getCenterOfExtent(transformExtent(layer.get("tcfDat").bbox.split(","), "EPSG:4326", "EPSG:"+mapSrid));
+        olMap.olMap.centerOn(center);
     },
 };
 

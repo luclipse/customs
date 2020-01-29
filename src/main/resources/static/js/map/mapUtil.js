@@ -76,4 +76,8 @@ function random_rgba() {
     return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + /*r().toFixed(1)*/'0.1' + ')';
 }
 
-
+function getCenterOfExtent(Extent){
+    var X = Extent[0] + (Extent[2]-Extent[0])/2;
+    var Y = Extent[1] + (Extent[3]-Extent[1])/2;
+    return [X, Y];
+}

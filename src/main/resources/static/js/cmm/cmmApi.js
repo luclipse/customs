@@ -32,13 +32,13 @@ var cmmApi = {
     },
     
     //sno로 TcfDat를 가져옴
-    getTcfDatBySno : function (layer, style, callback, failCallback) {
+    getTcfDatBySno : function (datSno, layer, style, callback, failCallback, TcfTimeSeries) {
         $.ajax({
             url: serverMapCmmHost + "/tcfDat/getTcfDatBySno",
-            data : {datSno : layer.datSno},
+            data : {datSno : datSno},
             success: function (res) {
                 if(res.cd === cmmApi.CD_SUCCESS) {
-                    callback(layer,style,res.data);
+                    callback(layer,style,res.data,TcfTimeSeries);
                 } else {
                     //failCallback(res.data);
                 }
@@ -246,6 +246,16 @@ var cmmApi = {
             data : {srcSno : data.tblNm.split(';')[2]},
             success: function (res) {
                 callback(layer, style, data, res);
+            }
+        });
+    },
+    // TcfDatTimeSeries 목록을 가져옴
+    getTcfDatTimeSeries : function (layer, data, callback) {
+        $.ajax({
+            url: serverMapCmmHost + "/tcfDatTimeSeries/getTcfDatTimeSeries",
+            data : data,
+            success: function (res) {
+                callback(layer, res);
             }
         });
     },
