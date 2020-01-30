@@ -7,12 +7,21 @@ var currentLayer = null;
 
 var idInputTimeseries = 'input-timeseries';
 var idLabelTimeseries = 'label-timeseries';
-var timeSeriesLayerName =  'ztmp_grid_5179';
+var timeSeriesLayerName =  '';
 var timeSeriesLayerIdx =  0;
 
 var idDivDataInfo = 'div-data-info';
 
 var init = function () {
+    //todo 시연용 소스
+    if(mapSno == 1) {
+        timeSeriesLayerName =  'ztmp_grid';
+    } else if(mapSno == 3){
+        timeSeriesLayerName =  'sample_2018';
+    } else {
+        timeSeriesLayerName = '';
+    }
+
     //olMap.addBaseLayer(vworldSrc.vector, [14137575.330745745, 4300621.372044271], 13);
     initLayer();
     //레이어 그리드 설정
@@ -68,28 +77,46 @@ var initAddr = function () {
         mapApi.getAddrByPoint('z_sop_bnd_adm_dong_pg', 'adm_dr_nm', 'adm_dr_cd', coord, 'input-adm', locAdm, 'EPSG:3857', 'EPSG:5181', setAddr);
     });
 };
+// 지도 클릭시 이벤트
 var initSingleClickEvent = function () {
     olMap.olMap.on('singleclick', function(evt) {
+        var row = grid.getRow(grid.getFocusedCell().rowKey);
+        if(row == null || row.type === 'baseLayer') {
+            return;
+        }
         var viewResolution = /** @type {number} */ (olMap.olMap.getView().getResolution());
-        var url = olMap.getTimeSeriesLayer(timeSeriesLayerName, timeSeriesLayerIdx).getSource().getFeatureInfoUrl(
-            evt.coordinate, viewResolution, 'EPSG:'+mapSrid,{'INFO_FORMAT': 'application/json'});
-        if (url) {
-            fetch(url)
-                .then(function (response) {
-                    return response.text();
-                })
-                .then(function (str) {
-                    var featuresInfo = JSON.parse(str).features;
-                    if(featuresInfo.length === 0){
-                        setDivDataInfo(null,false)
-                    } else {
-                        setDivDataInfo(featuresInfo, true);
-                    }
-                });
+        var layer = olMap.getLayersByName(row.name);
+        var source = null;
+        if(layer.get("timeSeriesOlLayer").length > 0){
+            source = olMap.getTimeSeriesLayer(timeSeriesLayerName, timeSeriesLayerIdx).getSource();
+        } else {
+            source = layer.getSource();
+        }
+        if(row.tblName.split(';').length === 4 && row.tblName.split(';')[0]==='GEO' && row.tblName.split(';')[1]==='WMS'){
+            var url = source.getFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:'+mapSrid,{'INFO_FORMAT': 'application/json'});
+            if (url) {
+                fetch(url)
+                    .then(function (response) {
+                        return response.text();
+                    })
+                    .then(function (str) {
+                        var featuresInfo = JSON.parse(str).features;
+                        if(featuresInfo.length === 0){
+                            setDivDataInfo(null,false)
+                        } else {
+                            setDivDataInfo(featuresInfo, true);
+                        }
+                    });
+            }
+        } else if(data.tblName.split(';').length === 4 && data.tblName.split(';')[0]==='GEO' && data.tblName.split(';')[1]==='WFS'){
+            //todo 값 가져오는 부분 지오서버 WFS
+        } else {
+            //todo 값 가져오는 부분 기본서버
         }
     });
 };
 
+//데이터 출력 부분
 var setDivDataInfo  = function (featuresInfo, isDisplay) {
     if(isDisplay){
         var html = '';
@@ -293,7 +320,7 @@ var addTimeSeriesLayer = function (layer, style, data, tcfTimeSeries) {
     if(JSON.parse(tcfTimeSeries.timeSeriesDesc).index != 0){
         olLayer.setVisible(false);
     } else {
-        $('#' + idLabelTimeseries).val(JSON.parse(tcfTimeSeries.timeSeriesDesc).name);
+        $('#' + idLabelTimeseries).html(JSON.parse(tcfTimeSeries.timeSeriesDesc).name);
         olLayer.setVisible(true);
     }
     layer.get("timeSeriesOlLayer").push(olLayer);
@@ -435,6 +462,6 @@ var idInputTimeSeriesChangeEvent = function(idx){
     });
     var olLayer = olMap.getTimeSeriesLayer(this.timeSeriesLayerName, idx)
     olLayer.setVisible(true);
-    $('#' + idLabelTimeseries).val(JSON.parse(olLayer.get("timeSeries").timeSeriesDesc).name);
+    $('#' + idLabelTimeseries).html(JSON.parse(olLayer.get("timeSeries").timeSeriesDesc).name);
 };
 
