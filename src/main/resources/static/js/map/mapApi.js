@@ -138,7 +138,24 @@ var mapApi = {
                 }
             }
         });
-    }
+    },
+
+    // comment 가져옴
+    getGetTableComment : function (tableName, featuresInfo, callback) {
+        $.ajax({
+            url: serverMapHost + "/geoCalc/getTableComment",
+            data : {
+                layerName : tableName
+            },
+            success: function (res) {
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    callback(featuresInfo,true,res.data);
+                } else {
+
+                }
+            }
+        });
+    },
 };
 
 

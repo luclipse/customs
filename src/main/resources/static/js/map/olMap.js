@@ -88,7 +88,7 @@ var olMap = {
                 zoom: zoom
             })
         });
-        this.baseLayer.set("name", "base");
+        this.baseLayer.set("name", "지도");
         this.baseLayer.set("type", "baseLayer");
         this.baseLayer.set("tblName", "");
         this.baseLayer.set("srid", mapSrid);
@@ -305,6 +305,14 @@ var olMap = {
         });
         return res;
     },
+    getVisibleTimeSeriesLayer :function(name){
+        var res = null;
+        var layer = this.getLayersByName(name);
+        var timeSeriesOlLayer = layer.get("timeSeriesOlLayer");
+        timeSeriesOlLayer.forEach(function (item, idx) {
+        });
+        return res;
+    },
     getTimeSeriesLayerList :function(name){
         return this.getLayersByName(name).get("timeSeriesOlLayer");
     },
@@ -354,6 +362,11 @@ var olMap = {
         var center = getCenterOfExtent(transformExtent(layer.get("tcfDat").bbox.split(","), "EPSG:4326", "EPSG:"+mapSrid));
         olMap.olMap.centerOn(center);
     },
+
+    getGeoServerWmsLegend : function (layer, resolution, param) {
+        var wmsSource = layer.getSource();
+        return wmsSource.getLegendUrl(resolution, param);
+    }
 };
 
 

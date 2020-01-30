@@ -99,9 +99,13 @@
             left: 50%;
             bottom: 10px;
             width: 300px;
-
         }
-
+        .legend {
+            position: fixed;
+            left: 320px;
+            bottom: 20px;
+            width: 150px;
+        }
         .data-info {
             position: fixed;
             right: 10px;
@@ -353,12 +357,16 @@
             <button type="button" class="btn btn-secondary" onclick="toggleStyle();">창 닫기</button>
         </div>
     </div>
-    <div id="div-timeseries" class="card timeSeries" >
+    <div id="div-timeseries" class="card timeSeries">
         <label id="label-timeseries"></label>
         <input type="range" min="0" max="1" value="0" class="slider" id="input-timeseries" oninput="idInputTimeSeriesChangeEvent(this.value)" onchange="idInputTimeSeriesChangeEvent(this.value)">
     </div>
 
     <div id="div-data-info" class="card data-info" style="display: none">
+    </div>
+
+    <div id="div-legend" class="card legend" style="display: none">
+        <img id="img-legend" src="" style="width: 100%;height: 100%"/>
     </div>
    <%-- <div class="sidebars">
         <div class="sidebar down">

@@ -7,17 +7,20 @@ var currentLayer = null;
 
 var idInputTimeseries = 'input-timeseries';
 var idLabelTimeseries = 'label-timeseries';
+var idDivTimeseries = 'div-timeseries';
+var idDivDataInfo = 'div-data-info';
+var idImgLegend = 'img-legend';
+var idDivLegend = 'div-legend';
+
 var timeSeriesLayerName =  '';
 var timeSeriesLayerIdx =  0;
-
-var idDivDataInfo = 'div-data-info';
 
 var init = function () {
     //todo 시연용 소스
     if(mapSno == 1) {
-        timeSeriesLayerName =  'ztmp_grid';
+        timeSeriesLayerName =  '인구격자';
     } else if(mapSno == 3){
-        timeSeriesLayerName =  'sample_2018';
+        timeSeriesLayerName =  '쓰레기 예측량';
     } else {
         timeSeriesLayerName = '';
     }
@@ -62,6 +65,8 @@ var init = function () {
     tui.Grid.applyTheme('clean');
     initData(null);
     olStyle.initStyle('a-line-color', 'a-plane-color', 'input-line-size', 'div-radius-size', 'input-radius-size');
+    grid.on('click', layerFocusEvent);
+
 };
 var initAddr = function () {
 //주소를 가져온다.
@@ -102,9 +107,9 @@ var initSingleClickEvent = function () {
                     .then(function (str) {
                         var featuresInfo = JSON.parse(str).features;
                         if(featuresInfo.length === 0){
-                            setDivDataInfo(null,false)
+                            setDivDataInfo(null,false, null);
                         } else {
-                            setDivDataInfo(featuresInfo, true);
+                            mapApi.getGetTableComment(row.tblName.split(';')[3].split(':')[1], featuresInfo, setDivDataInfo);
                         }
                     });
             }
@@ -116,20 +121,62 @@ var initSingleClickEvent = function () {
     });
 };
 
+var layerFocusEvent = function (ev) {
+    var row = grid.getRow(grid.getFocusedCell().rowKey);
+
+    //todo 시계열 관련 개발 해야함
+    /*
+    if(row == null || row.type === 'baseLayer') {
+        $('#'+idDivTimeseries).hide();
+    } else {
+        var layer = olMap.getLayersByName(row.name);
+        var timeSeriesOlLayer = layer.get("timeSeriesOlLayer");
+        $('#'+idInputTimeseries)[0].max = (timeSeriesOlLayer.length-1);
+        $('#'+idInputTimeseries).val(0);
+    }
+    */
+    //legend 관련
+    if(row == null || row.type === 'baseLayer') {
+        $('#'+idDivLegend).hide();
+    } else if(row.tblName.split(';').length === 4 && row.tblName.split(';')[0]==='GEO' && row.tblName.split(';')[1]==='WMS'){
+        var imageSrc = olMap.getGeoServerWmsLegend(olMap.getLayersByName(row.name), olMap.olMap.getView().getResolution(), {'WIDTH': '50', 'legend_options': 'fontAntiAliasing:true;dpi:120'});
+        $('#'+idImgLegend).attr("src",imageSrc);
+        $('#'+idDivLegend).show();
+    } else if(data.tblName.split(';').length === 4 && data.tblName.split(';')[0]==='GEO' && data.tblName.split(';')[1]==='WFS'){
+        //todo WMS
+        $('#'+idDivLegend).hide();
+    } else {
+        //todo 기본
+        $('#'+idDivLegend).hide();
+    }
+};
+
+
 //데이터 출력 부분
-var setDivDataInfo  = function (featuresInfo, isDisplay) {
+var setDivDataInfo  = function (featuresInfo, isDisplay, comments) {
     if(isDisplay){
         var html = '';
-        featuresInfo.forEach(function (item) {
-            for(var key in item.properties){
+        if(featuresInfo.length > 0){
+            //첫번째 정보를 표기함.
+            for(var key in featuresInfo[0].properties){
+                var keyNm = '';
+                if(comments != null) {
+                    for (var i = 0; i < comments.length; i++) {
+                        if(comments[i].column_name === key)
+                            keyNm = comments[i].column_comment;
+                    }
+                }
+                if(keyNm === '')
+                    keyNm = key;
+
                 html = html+
                     '<li class="list-group-item">' +
-                    key +':'+ item.properties[key] +
+                    keyNm +' : '+  featuresInfo[0].properties[key]+
                     '</li>';
             }
-        });
-        $('#'+idDivDataInfo).html('<ul class="list-group list-group-flush">'+html+'</ul>');
-        $('#'+idDivDataInfo).show();
+            $('#'+idDivDataInfo).html('<ul class="list-group list-group-flush">'+html+'</ul>');
+            $('#'+idDivDataInfo).show();
+        }
     } else {
         $('#'+idDivDataInfo).html('');
         $('#'+idDivDataInfo).hide();
@@ -455,7 +502,7 @@ var toggleStyle = function () {
 };
 
 var idInputTimeSeriesChangeEvent = function(idx){
-    setDivDataInfo(null, false);
+    setDivDataInfo(null, false, null);
     this.timeSeriesLayerIdx = idx;
     olMap.getTimeSeriesLayerList(this.timeSeriesLayerName).forEach(function (item) {
         item.setVisible(false);
