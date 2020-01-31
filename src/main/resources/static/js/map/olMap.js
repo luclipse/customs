@@ -309,8 +309,12 @@ var olMap = {
         var res = null;
         var layer = this.getLayersByName(name);
         var timeSeriesOlLayer = layer.get("timeSeriesOlLayer");
-        timeSeriesOlLayer.forEach(function (item, idx) {
-        });
+        for (var i = 0; i < timeSeriesOlLayer.length; i++) {
+            if(timeSeriesOlLayer[i].getVisible()){
+                res =  timeSeriesOlLayer[i];
+                break;
+            }
+        }
         return res;
     },
     getTimeSeriesLayerList :function(name){

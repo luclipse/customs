@@ -17,13 +17,13 @@ var timeSeriesLayerIdx =  0;
 
 var init = function () {
     //todo 시연용 소스
-    if(mapSno == 1) {
+    /*if(mapSno == 1) {
         timeSeriesLayerName =  '인구격자';
     } else if(mapSno == 3){
         timeSeriesLayerName =  '쓰레기 예측량';
     } else {
         timeSeriesLayerName = '';
-    }
+    }*/
 
     //olMap.addBaseLayer(vworldSrc.vector, [14137575.330745745, 4300621.372044271], 13);
     initLayer();
@@ -82,60 +82,88 @@ var initAddr = function () {
         mapApi.getAddrByPoint('z_sop_bnd_adm_dong_pg', 'adm_dr_nm', 'adm_dr_cd', coord, 'input-adm', locAdm, 'EPSG:3857', 'EPSG:5181', setAddr);
     });
 };
+
 // 지도 클릭시 이벤트
 var initSingleClickEvent = function () {
     olMap.olMap.on('singleclick', function(evt) {
-        var row = grid.getRow(grid.getFocusedCell().rowKey);
-        if(row == null || row.type === 'baseLayer') {
-            return;
-        }
-        var viewResolution = /** @type {number} */ (olMap.olMap.getView().getResolution());
-        var layer = olMap.getLayersByName(row.name);
-        var source = null;
-        if(layer.get("timeSeriesOlLayer").length > 0){
-            source = olMap.getTimeSeriesLayer(timeSeriesLayerName, timeSeriesLayerIdx).getSource();
-        } else {
-            source = layer.getSource();
-        }
-        if(row.tblName.split(';').length === 4 && row.tblName.split(';')[0]==='GEO' && row.tblName.split(';')[1]==='WMS'){
-            var url = source.getFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:'+mapSrid,{'INFO_FORMAT': 'application/json'});
-            if (url) {
-                fetch(url)
-                    .then(function (response) {
-                        return response.text();
-                    })
-                    .then(function (str) {
-                        var featuresInfo = JSON.parse(str).features;
-                        if(featuresInfo.length === 0){
-                            setDivDataInfo(null,false, null);
-                        } else {
-                            mapApi.getGetTableComment(row.tblName.split(';')[3].split(':')[1], featuresInfo, setDivDataInfo);
-                        }
-                    });
-            }
-        } else if(data.tblName.split(';').length === 4 && data.tblName.split(';')[0]==='GEO' && data.tblName.split(';')[1]==='WFS'){
-            //todo 값 가져오는 부분 지오서버 WFS
-        } else {
-            //todo 값 가져오는 부분 기본서버
-        }
+        getFeaturesInfo(evt);
     });
 };
 
-var layerFocusEvent = function (ev) {
+// 피쳐 정보 가져오는 함수
+var getFeaturesInfo = function (evt) {
     var row = grid.getRow(grid.getFocusedCell().rowKey);
+    if(row == null || row.type === 'baseLayer') {
+        return;
+    }
+    var viewResolution = /** @type {number} */ (olMap.olMap.getView().getResolution());
+    var layer = olMap.getLayersByName(row.name);
+    var source = null;
+    if(layer.get("timeSeriesOlLayer").length > 0){
+        source = olMap.getTimeSeriesLayer(timeSeriesLayerName, timeSeriesLayerIdx).getSource();
+    } else {
+        source = layer.getSource();
+    }
+    if(row.tblName.split(';').length === 4 && row.tblName.split(';')[0]==='GEO' && row.tblName.split(';')[1]==='WMS'){
+        var url = source.getFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:'+mapSrid,{'INFO_FORMAT': 'application/json'});
+        if (url) {
+            fetch(url)
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (str) {
+                    var featuresInfo = JSON.parse(str).features;
+                    if(featuresInfo.length === 0){
+                        setDivDataInfo(null,false, null);
+                    } else {
+                        mapApi.getGetTableComment(row.tblName.split(';')[3].split(':')[1], featuresInfo, setDivDataInfo);
+                    }
+                });
+        }
+    } else if(row.tblName.split(';').length === 4 && row.tblName.split(';')[0]==='GEO' && row.tblName.split(';')[1]==='WFS'){
+        //todo 값 가져오는 부분 지오서버 WFS
+    } else {
+        //todo 값 가져오는 부분 기본서버
+    }
+};
 
-    //todo 시계열 관련 개발 해야함
-    /*
+// layer 선택시 발생하는 이벤트
+var layerFocusEvent = function (ev) {
+    // legend 관련
+    setFocusLayerForLegend();
+    // 시계열 관련 이벤트
+    setFocusLayerForTimeSeries();
+};
+
+// layer 선택시 시계열 변경 이벤트
+var setFocusLayerForTimeSeries = function () {
+    var row = grid.getRow(grid.getFocusedCell().rowKey);
     if(row == null || row.type === 'baseLayer') {
         $('#'+idDivTimeseries).hide();
     } else {
         var layer = olMap.getLayersByName(row.name);
         var timeSeriesOlLayer = layer.get("timeSeriesOlLayer");
-        $('#'+idInputTimeseries)[0].max = (timeSeriesOlLayer.length-1);
-        $('#'+idInputTimeseries).val(0);
+        if(timeSeriesOlLayer.length > 0){
+            timeSeriesLayerName = row.name;
+            var tcfTimeSeries = olMap.getVisibleTimeSeriesLayer(row.name).get("timeSeries");
+            var timeSeriesDesc = JSON.parse(tcfTimeSeries.timeSeriesDesc);
+            $('#' + idInputTimeseries)[0].max = (timeSeriesOlLayer.length-1);
+            $('#' + idInputTimeseries).val(timeSeriesDesc.index);
+            timeSeriesLayerIdx = timeSeriesDesc.index;
+            $('#' + idLabelTimeseries).html(timeSeriesDesc.name);
+            $('#'+idDivTimeseries).show();
+        } else {
+            $('#' + idInputTimeseries)[0].max = 0;
+            $('#' + idInputTimeseries).val(0);
+            $('#' + idLabelTimeseries).html('');
+            $('#'+idDivTimeseries).hide();
+        }
     }
-    */
-    //legend 관련
+};
+
+// layer 선택시 legend 변경 이벤트
+var setFocusLayerForLegend = function () {
+    var row = grid.getRow(grid.getFocusedCell().rowKey);
     if(row == null || row.type === 'baseLayer') {
         $('#'+idDivLegend).hide();
     } else if(row.tblName.split(';').length === 4 && row.tblName.split(';')[0]==='GEO' && row.tblName.split(';')[1]==='WMS'){
@@ -143,14 +171,13 @@ var layerFocusEvent = function (ev) {
         $('#'+idImgLegend).attr("src",imageSrc);
         $('#'+idDivLegend).show();
     } else if(data.tblName.split(';').length === 4 && data.tblName.split(';')[0]==='GEO' && data.tblName.split(';')[1]==='WFS'){
-        //todo WMS
+        //todo WMS legend
         $('#'+idDivLegend).hide();
     } else {
-        //todo 기본
+        //todo 기본 legend
         $('#'+idDivLegend).hide();
     }
 };
-
 
 //데이터 출력 부분
 var setDivDataInfo  = function (featuresInfo, isDisplay, comments) {
@@ -309,7 +336,7 @@ var addLayer = function (layer, style, data) {
         var olLayer = olMap.addVectorLayer(serverMapHost + '/geoCalc/getMap', 'EPSG:'+mapSrid, minResolution, maxResolution, style, null, layer, data);
         grid.resetData(olMap.getLayerListJson('layer,baseLayer'));
         $('#div-data-grid').hide();
-        addTimeSeries(olLayer);
+        getTimeSeriesList(olLayer);
     }
 };
 
@@ -329,16 +356,18 @@ var _addGeoLayer = function (layer, style, data, src) {
     olLayer.set("url", src[0].srcUrl);
     grid.resetData(olMap.getLayerListJson('layer,baseLayer'));
     $('#div-data-grid').hide();
-    addTimeSeries(olLayer);
+    getTimeSeriesList(olLayer);
 };
 
-var addTimeSeries= function(olLayer){
+// 해당 레이어의 시계열 레이어 목록 가져옴 
+var getTimeSeriesList= function(olLayer){
     var data = {
         laySno : olLayer.get("tcfLay").laySno
     };
-    cmmApi.getTcfDatTimeSeries(olLayer, data, _addTimeSeries);
+    cmmApi.getTcfDatTimeSeries(olLayer, data, _getTimeSeriesList);
 };
-var _addTimeSeries= function(olLayer, res){
+// 시계열 레이어 목록 콜백 함수
+var _getTimeSeriesList= function(olLayer, res){
     olLayer.set("timeSeriesOlLayer", []);
     if(olLayer.get("tcfDat").datSno != -1) {
         res.forEach(function (item) {
@@ -351,6 +380,7 @@ var _addTimeSeries= function(olLayer, res){
         }
     }
 };
+// 시계열 레이어를 추가
 var addTimeSeriesLayer = function (layer, style, data, tcfTimeSeries) {
     var olLayer;
     if(data.tblNm.split(';').length === 4 && data.tblNm.split(';')[0]==='GEO' && data.tblNm.split(';')[1]==='WFS'){
@@ -501,6 +531,7 @@ var toggleStyle = function () {
     div.toggle();
 };
 
+// input 값 변경에 따른 시계열 레이어 변경 이벤트
 var idInputTimeSeriesChangeEvent = function(idx){
     setDivDataInfo(null, false, null);
     this.timeSeriesLayerIdx = idx;
