@@ -64,6 +64,7 @@ var mapApi = {
             maxResolution: maxResolution
         });
     },
+
     //해당 extend 에서 Geoserver의 WFS 데이터를 가져옴.
     getGeoServerVectorLayerExtend : function  (url, toPrj, minResolution, maxResolution, style, data) {
         var source = new ol.source.Vector({
@@ -98,7 +99,7 @@ var mapApi = {
         });
         return new ol.layer.Tile({
             // TODO 임시로 투명도 부여
-            opacity: 0.5,
+            opacity: 0.8,
             source: source,
             minResolution: minResolution,
             maxResolution: maxResolution
@@ -156,6 +157,20 @@ var mapApi = {
             }
         });
     },
+    // 선택한 포인트의 정보 값 가져오기
+    getMapPointInfo : function (layerName, point, fromPrj, toPrj, callback) {
+        var coord = transformCoord(point, toPrj, fromPrj);
+        $.ajax({
+            url: serverMapHost + "/geoCalc/getMapPointInfo?layerName=" + layerName + "&point=" + coord + "&fromPrj="+ fromPrj +"&toPrj=" + toPrj,
+            success: function (res) {
+                if(res.cd === cmmApi.CD_SUCCESS) {
+                    callback(res.data);
+                } else {
+
+                }
+            }
+        });
+    }
 };
 
 

@@ -16,14 +16,7 @@ var timeSeriesLayerName =  '';
 var timeSeriesLayerIdx =  0;
 
 var init = function () {
-    //todo 시연용 소스
-    /*if(mapSno == 1) {
-        timeSeriesLayerName =  '인구격자';
-    } else if(mapSno == 3){
-        timeSeriesLayerName =  '쓰레기 예측량';
-    } else {
-        timeSeriesLayerName = '';
-    }*/
+
 
     //olMap.addBaseLayer(vworldSrc.vector, [14137575.330745745, 4300621.372044271], 13);
     initLayer();
@@ -105,8 +98,23 @@ var getFeaturesInfo = function (evt) {
         source = layer.getSource();
     }
     if(row.tblName.split(';').length === 4 && row.tblName.split(';')[0]==='GEO' && row.tblName.split(';')[1]==='WMS'){
+        //값 가져오는 지오서버 WMS
         var url = source.getFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:'+mapSrid,{'INFO_FORMAT': 'application/json'});
         if (url) {
+            $.ajax({
+                url: url,
+                success: function (obj) {
+                    var featuresInfo = obj.features;
+                    if(featuresInfo.length === 0){
+                        setDivDataInfo(null,false, null);
+                    } else {
+                        mapApi.getGetTableComment(row.tblName.split(';')[3].split(':')[1], featuresInfo[0].properties, setDivDataInfo);
+                    }
+                }
+            });
+
+            // fetch 가 최신 기술이긴하나. 익스에서 지원하지 않음..
+            /*
             fetch(url)
                 .then(function (response) {
                     return response.text();
@@ -119,11 +127,19 @@ var getFeaturesInfo = function (evt) {
                         mapApi.getGetTableComment(row.tblName.split(';')[3].split(':')[1], featuresInfo, setDivDataInfo);
                     }
                 });
+            */
         }
-    } else if(row.tblName.split(';').length === 4 && row.tblName.split(';')[0]==='GEO' && row.tblName.split(';')[1]==='WFS'){
-        //todo 값 가져오는 부분 지오서버 WFS
     } else {
-        //todo 값 가져오는 부분 기본서버
+        //WFS 값 가져오기 (GeoServer, 기본 서버 WFS 값 가져오기)
+        source.getFeaturesAtCoordinate(evt.coordinate)[0].getProperties();
+        var featuresInfo = source.getFeaturesAtCoordinate(evt.coordinate);
+        if(featuresInfo.length === 0){
+            setDivDataInfo(null,false, null);
+        } else {
+            var properties = featuresInfo[0].getProperties();
+            delete properties["geometry"];
+            mapApi.getGetTableComment(row.tblName, properties, setDivDataInfo);
+        }
     }
 };
 
@@ -170,7 +186,7 @@ var setFocusLayerForLegend = function () {
         var imageSrc = olMap.getGeoServerWmsLegend(olMap.getLayersByName(row.name), olMap.olMap.getView().getResolution(), {'WIDTH': '50', 'legend_options': 'fontAntiAliasing:true;dpi:120'});
         $('#'+idImgLegend).attr("src",imageSrc);
         $('#'+idDivLegend).show();
-    } else if(data.tblName.split(';').length === 4 && data.tblName.split(';')[0]==='GEO' && data.tblName.split(';')[1]==='WFS'){
+    } else if(row.tblName.split(';').length === 4 && row.tblName.split(';')[0]==='GEO' && row.tblName.split(';')[1]==='WFS'){
         //todo WMS legend
         $('#'+idDivLegend).hide();
     } else {
@@ -180,33 +196,32 @@ var setFocusLayerForLegend = function () {
 };
 
 //데이터 출력 부분
-var setDivDataInfo  = function (featuresInfo, isDisplay, comments) {
-    if(isDisplay){
+var setDivDataInfo = function (featuresInfo, isDisplay, comments) {
+    if (isDisplay) {
         var html = '';
-        if(featuresInfo.length > 0){
-            //첫번째 정보를 표기함.
-            for(var key in featuresInfo[0].properties){
-                var keyNm = '';
-                if(comments != null) {
-                    for (var i = 0; i < comments.length; i++) {
-                        if(comments[i].column_name === key)
-                            keyNm = comments[i].column_comment;
-                    }
+        //첫번째 정보를 표기함.
+        for (var key in featuresInfo) {
+            var keyNm = '';
+            if (comments != null) {
+                for (var i = 0; i < comments.length; i++) {
+                    if (comments[i].column_name === key)
+                        keyNm = comments[i].column_comment;
                 }
-                if(keyNm === '')
-                    keyNm = key;
-
-                html = html+
-                    '<li class="list-group-item">' +
-                    keyNm +' : '+  featuresInfo[0].properties[key]+
-                    '</li>';
             }
-            $('#'+idDivDataInfo).html('<ul class="list-group list-group-flush">'+html+'</ul>');
-            $('#'+idDivDataInfo).show();
+            if (keyNm === '')
+                keyNm = key;
+
+            html = html +
+                '<li class="list-group-item">' +
+                keyNm + ' : ' + featuresInfo[key] +
+                '</li>';
         }
+        $('#' + idDivDataInfo).html('<ul class="list-group list-group-flush">' + html + '</ul>');
+        $('#' + idDivDataInfo).show();
+
     } else {
-        $('#'+idDivDataInfo).html('');
-        $('#'+idDivDataInfo).hide();
+        $('#' + idDivDataInfo).html('');
+        $('#' + idDivDataInfo).hide();
     }
 
 };
@@ -299,7 +314,7 @@ var cbAddNewLayerStyle = function (res, dat) {
         } else if(type=== 'MULTILINESTRING' || type === 'LINESTRING'){
             style = olStyle.getLineStyle(olStyle.getStroke(random_rgb(), 1));
         } else {
-            //추후 다른 타입
+            //todo 추후 다른 타입
         }
         var data = {
             laySno : res.laySno,
@@ -312,7 +327,7 @@ var cbAddNewLayerStyle = function (res, dat) {
 // 새로운 레이어 추가 콜백
 var cbAddNewLayer =function(style){
     var row = dataGrid.getRow(dataGrid.getFocusedCell().rowKey);
-    var layer = {layNm : row.datNm};
+    var layer = {laySno : style.laySno, layNm : row.datNm};
     addLayer(layer, style, row);
 };
 
